@@ -1,0 +1,10 @@
+{
+    "name": "d002834/backend",
+    "description": "Backend Environment for practice project",
+    "autoload": {
+        "psr-4": {
+            "D002834\\Backend\\": "src/"
+        }
+    },
+    "require": {}
+}
