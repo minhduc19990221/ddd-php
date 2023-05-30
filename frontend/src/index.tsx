@@ -5,6 +5,7 @@ import './index.css';
 import SignIn from './pages/SignIn';
 import reportWebVitals from './reportWebVitals';
 import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 
 
 const root = document.getElementById('root');
@@ -16,6 +17,7 @@ if (root) {
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<Profile />} />
         {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </BrowserRouter>

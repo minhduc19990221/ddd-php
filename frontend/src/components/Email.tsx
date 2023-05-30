@@ -15,10 +15,6 @@ class EmailField extends Component<{}, State> {
         };
     }
 
-    // handleChange = (event: { target: { value: any; }; }) => {
-    //     this.setState({ email: event.target.value });
-    // };
-
     handleChange = (event: {
         [x: string]: any; preventDefault: () => void;
     }) => {
