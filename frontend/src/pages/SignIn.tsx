@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +13,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailField from '../components/Email';
 import PasswordField from '../components/Password';
+import axios from 'axios';
+
 
 function Copyright(props: any) {
   return (
@@ -29,13 +33,27 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event: {
+    currentTarget: HTMLFormElement | undefined; preventDefault: () => void;
+  }) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const user_input = new FormData(event.currentTarget);
+    const email = user_input.get('email') as string;
+    const password = user_input.get('password') as string;
+    console.table({
+      email,
+      password,
     });
+    try {
+      const response = await axios.post('/api/auth/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      navigate('/dashboard');
+    } catch (error: any) {
+      setError(error.response.data.message);
+    }
   };
 
   return (
