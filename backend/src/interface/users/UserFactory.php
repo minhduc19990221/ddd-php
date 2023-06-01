@@ -11,6 +11,7 @@ class UserFactory implements IUserFactory
     private function __construct()
     {
         self::$user_repository = UserRepository::getInstance();
+        self::$user_repository->createTable();
     }
 
     public static function getInstance(): ?UserFactory
