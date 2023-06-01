@@ -62,12 +62,16 @@ class Database
     {
         try {
             $this->connection->exec("USE $db_name");
-            $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(30) NOT NULL,
-            email VARCHAR(50),
-            reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )";
+            $sql = "CREATE TABLE IF NOT EXISTS $table_name
+            (
+               id         INT PRIMARY KEY auto_increment NOT NULL,
+               email      VARCHAR(255) NOT NULL,
+               password   VARCHAR(100) NOT NULL,
+               fullname   VARCHAR(100) NOT NULL,
+               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+               UNIQUE (email)
+            );";
 
             $this->connection->exec($sql);
             echo "Table $table_name created successfully in database $db_name.<br/>";
@@ -75,7 +79,5 @@ class Database
             echo $sql . "<br>" . $e->getMessage();
         }
     }
-
-
 }
 
