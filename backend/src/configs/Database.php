@@ -1,5 +1,6 @@
 <?php
 namespace D002834\Backend\configs;
+use PDO;
 use PDOException;
 
 class Database
@@ -38,11 +39,7 @@ class Database
         return self::$instance;
     }
 
-    private function __clone() { }
-
-    private function __wakeup() { }
-
-    public function getConnection()
+    public function getConnection(): PDO
     {
         return $this->connection;
     }

@@ -1,27 +1,38 @@
 <?php
-namespace D002834\Backend\repository\UserRepository;
+namespace D002834\Backend\repository;
 
 
 use D002834\Backend\configs\Database;
+use PDO;
+use PDOStatement;
 
 
-class User
+class UserRepository
 {
-    private $connection;
-    private $table_name = "users";
+    private static ?UserRepository $instance = null;
+    private PDO $connection;
+    private string $table_name = "users";
 
-    public $id;
-    public $fullname;
-    public $email;
-    public $password;
+    public int $id;
+    public string $fullname;
+    public string $email;
+    public string $password;
 
-    public function __construct()
+    private function __construct()
     {
         $db = Database::getInstance();
         $this->connection = $db->getConnection();
     }
 
-    public function createTable()
+    public static function getInstance(): ?UserRepository
+    {
+        if (self::$instance == null) {
+            self::$instance = new UserRepository();
+        }
+        return self::$instance;
+    }
+
+    public function createTable(): void
     {
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
             id         INT PRIMARY KEY auto_increment NOT NULL,
@@ -36,7 +47,7 @@ class User
         $this->connection->exec($sql);
     }
 
-    public function read($limit, $offset)
+    public function read($limit, $offset): bool|PDOStatement
     {
         $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
         $stmt = $this->connection->prepare($sql);
@@ -45,7 +56,7 @@ class User
         return $stmt;
     }
 
-    public function readOne($email)
+    public function readOne($email): bool|PDOStatement
     {
         $sql = "SELECT * FROM $this->table_name WHERE email = $email LIMIT 1;";
         $stmt = $this->connection->prepare($sql);
@@ -55,7 +66,7 @@ class User
         return $stmt;
     }
 
-    public function createOne($fullname, $email, $password)
+    public function createOne($fullname, $email, $password): bool|PDOStatement
     {
         $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES ($fullname, $email, $password)";
         $stmt = $this->connection->prepare($sql);
@@ -67,7 +78,7 @@ class User
         return $stmt;
     }
 
-    public function updateOne($fullname, $email)
+    public function updateOne($fullname, $email): bool|PDOStatement
     {
         $sql = "UPDATE $this->table_name SET fullname = $fullname WHERE email = $email";
         $stmt = $this->connection->prepare($sql);
@@ -77,7 +88,7 @@ class User
         return $stmt;
     }
 
-    public function deleteOne($email)
+    public function deleteOne($email): bool|PDOStatement
     {
         $sql = "DELETE FROM $this->table_name WHERE email = $email";
         $stmt = $this->connection->prepare($sql);
