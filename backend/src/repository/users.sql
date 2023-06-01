@@ -7,6 +7,6 @@ CREATE TABLE users
      password   VARCHAR(100) NOT NULL,
      fullname   VARCHAR(100) NOT NULL,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      UNIQUE (email)
   );  

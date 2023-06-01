@@ -1,16 +1,17 @@
 <?php
 // Setting the Content-Type to JSON and allowing all origins to access it.
+use D002834\Backend\configs\Database;
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // MySQL database details
-$host = 'localhost';
-$db   = 'testdb';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
+$db = Database::getInstance();
+$connection = $db->getConnection();
+
+// Now you can use the $connection to run queries on your database
 
 // Preparing PDO connection to the MySQL database
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
