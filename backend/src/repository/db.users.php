@@ -11,9 +11,9 @@ class User
     private $table_name = "users";
 
     public $id;
-    public $firstname;
-    public $lastname;
+    public $fullname;
     public $email;
+    public $password;
 
     public function __construct()
     {
@@ -21,7 +21,7 @@ class User
         $this->connection = $db->getConnection();
     }
 
-    public function create()
+    public function createTable()
     {
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
             id         INT PRIMARY KEY auto_increment NOT NULL,
@@ -55,34 +55,31 @@ class User
         return $stmt;
     }
 
-    public function createOne()
+    public function createOne($fullname, $email, $password)
     {
-        $sql = "INSERT INTO $this->table_name (firstname, lastname, email) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES ($fullname, $email, $password)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->firstname);
-        $stmt->bindParam(2, $this->lastname);
-        $stmt->bindParam(3, $this->email);
+        $stmt->bindParam(1, $this->fullname);
+        $stmt->bindParam(2, $this->email);
+        $stmt->bindParam(3, $this->password);
         $stmt->execute();
 
         return $stmt;
     }
 
-    public function updateOne()
+    public function updateOne($fullname, $email)
     {
-        $sql = "UPDATE $this->table_name SET firstname = ?, lastname = ?, email = ? WHERE id = ?";
+        $sql = "UPDATE $this->table_name SET fullname = $fullname WHERE email = $email";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->firstname);
-        $stmt->bindParam(2, $this->lastname);
-        $stmt->bindParam(3, $this->email);
-        $stmt->bindParam(4, $this->id);
+        $stmt->bindParam(1, $this->fullname);
         $stmt->execute();
 
         return $stmt;
     }
 
-    public function deleteOne()
+    public function deleteOne($email)
     {
-        $sql = "DELETE FROM $this->table_name WHERE id = ?";
+        $sql = "DELETE FROM $this->table_name WHERE email = $email";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
