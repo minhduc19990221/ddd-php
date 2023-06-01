@@ -1,10 +1,9 @@
 <?php
-namespace D002834\Backend\repository\DatabaseEntry;
+namespace D002834\Backend\repository\UserRepository;
 
 
 use D002834\Backend\configs\Database;
 
-// Create a User class which will be used to create user table and user record in Database
 
 class User
 {
@@ -37,18 +36,18 @@ class User
         $this->connection->exec($sql);
     }
 
-    public function read()
+    public function read($limit, $offset)
     {
-        $sql = "SELECT * FROM $this->table_name";
+        $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
 
         return $stmt;
     }
 
-    public function readOne()
+    public function readOne($email)
     {
-        $sql = "SELECT * FROM $this->table_name WHERE id = ?";
+        $sql = "SELECT * FROM $this->table_name WHERE email = $email LIMIT 1;";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
