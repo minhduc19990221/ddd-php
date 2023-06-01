@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = UserRepository::getInstance();
 
     // Insert the new user record into the database
-    $user->createOne();
+    $user->createOne($data['fullname'], $data['email'], $data['password']);
 
     // Return a success message
     header('Content-Type: application/json');
