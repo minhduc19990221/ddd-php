@@ -11,9 +11,9 @@ class Database
     private PDO $connection;
 
     private string $host = 'localhost';
-    private string $username = 'username';
-    private string $password = 'password';
-    private string $database = 'myDB';
+    private string $username = 'root';
+    private string $password = 'mduc1999';
+    private string $database = 'practice';
     private string $charset = 'utf8mb4';
 
     private function __construct()

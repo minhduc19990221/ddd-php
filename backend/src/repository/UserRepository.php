@@ -5,6 +5,7 @@ namespace D002834\Backend\repository;
 
 use D002834\Backend\configs\Database;
 use PDO;
+use PDOException;
 use PDOStatement;
 
 
@@ -12,9 +13,9 @@ class UserRepository
 {
     private static ?UserRepository $instance = null;
     public int $id;
-    public string $fullname;
-    public string $email;
-    public string $password;
+    private string $fullname = '';
+    private string $email = '';
+    private string $password = '';
     private PDO $connection;
     private string $table_name = "users";
 
@@ -66,13 +67,33 @@ class UserRepository
         return $stmt;
     }
 
+    public function userExists($email, $password): bool
+{
+    try {
+        $sql = "SELECT COUNT(*) FROM $this->table_name WHERE email = :email AND password = :password LIMIT 1;";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':password', $password);
+        $stmt->execute();
+
+        return $stmt->fetchColumn() > 0;
+    } catch (PDOException $e) {
+        // handle the exception here
+        echo $e->getMessage();
+        return false;
+    }
+}
+
     public function createOne($fullname, $email, $password): bool|PDOStatement
     {
-        $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES ($fullname, $email, $password)";
+        $this->fullname = $fullname;
+        $this->email = $email;
+        $this->password = $password;
+        $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES (:fullname, :email, :password)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->fullname);
-        $stmt->bindParam(2, $this->email);
-        $stmt->bindParam(3, $this->password);
+        $stmt->bindValue(':fullname', $this->fullname);
+        $stmt->bindValue(':email', $this->email);
+        $stmt->bindValue(':password', $this->password);
         $stmt->execute();
 
         return $stmt;
