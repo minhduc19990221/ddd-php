@@ -1,26 +1,28 @@
 <?php
+
 namespace D002834\Backend\configs;
+
 use PDO;
 use PDOException;
 
 class Database
 {
-    private static $instance = null;
-    private $connection;
+    private static ?Database $instance = null;
+    private PDO $connection;
 
-    private $host = 'localhost';
-    private $username = 'username';
-    private $password = 'password';
-    private $database = 'myDB';
-    private $charset = 'utf8mb4';
+    private string $host = 'localhost';
+    private string $username = 'username';
+    private string $password = 'password';
+    private string $database = 'myDB';
+    private string $charset = 'utf8mb4';
 
     private function __construct()
     {
         $dsn = "mysql:host=$this->host;dbname=$this->database;charset=$this->charset";
         $opt = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
         try {
@@ -30,7 +32,7 @@ class Database
         }
     }
 
-    public static function getInstance()
+    public static function getInstance(): ?Database
     {
         if (!self::$instance) {
             self::$instance = new Database();
@@ -44,18 +46,18 @@ class Database
         return $this->connection;
     }
 
-    public function createDatabase($db_name)
+    public function createDatabase($db_name): void
     {
         try {
             $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
             $this->connection->exec($sql);
             echo "Database $db_name created successfully.<br/>";
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo $sql . "<br>" . $e->getMessage();
         }
     }
 
-    public function createTable($db_name, $table_name)
+    public function createTable($db_name, $table_name): void
     {
         try {
             $this->connection->exec("USE $db_name");
@@ -72,7 +74,7 @@ class Database
 
             $this->connection->exec($sql);
             echo "Table $table_name created successfully in database $db_name.<br/>";
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo $sql . "<br>" . $e->getMessage();
         }
     }

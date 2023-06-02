@@ -1,4 +1,5 @@
 <?php
+
 namespace D002834\Backend\repository;
 
 
@@ -10,13 +11,12 @@ use PDOStatement;
 class UserRepository
 {
     private static ?UserRepository $instance = null;
-    private PDO $connection;
-    private string $table_name = "users";
-
     public int $id;
     public string $fullname;
     public string $email;
     public string $password;
+    private PDO $connection;
+    private string $table_name = "users";
 
     private function __construct()
     {
