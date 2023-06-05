@@ -19,8 +19,11 @@ jobs:
         with:
           php-version: '8.3' # Change to the desired PHP version
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Clean install dependencies
+        run: composer install --no-interaction --no-progress --no-suggest
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit
+      
+      - name: Delete dependencies
+        run: rm -rf vendor
