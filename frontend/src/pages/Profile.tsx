@@ -28,7 +28,8 @@ function Profile() {
   };
 
   const handleLogout = () => {
-    // Handle logout logic here
+    localStorage.removeItem('token');
+    window.location.href = '/signin';
   };
 
   return (

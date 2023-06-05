@@ -8,17 +8,17 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 
-$key = "your_secret_key";
-function handle_login_request(): void
+function handle_login_request($request_body): void
 {
     global $key;
+    $key = "your_secret_key";
     try {
-        global $request_body;
         $email = $request_body['email'];
         $password = $request_body['password'];
         $user_handler = new UserHandler();
         $user = $user_handler->login($email, $password);
         if (!$user) {
+            header("HTTP/1.1 404 Not Found");
             header('Content-Type: application/json');
             echo json_encode(['error' => 'User not found']);
         } else {
@@ -33,9 +33,12 @@ function handle_login_request(): void
             );
             $jwt = JWT::encode($payload, $key, "HS256");  //generate the token
             header('Content-Type: application/json');
+            header("HTTP/1.1 200 OK");
             echo json_encode(['message' => 'User logged in successfully', 'token' => $jwt]);
         }
     } catch (Exception $e) {
+        error_log($e->getMessage());
+        header("HTTP/1.1 500 Internal Server Error");
         header('Content-Type: application/json');
         echo json_encode(['error' => $e->getMessage()]);
     }

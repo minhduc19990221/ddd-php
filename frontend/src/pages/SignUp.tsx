@@ -40,19 +40,25 @@ export default function SignUp() {
     event.preventDefault();
     const user_input = new FormData(event.currentTarget);
     const email = user_input.get('email') as string;
-    const fullName = user_input.get('fullName') as string;
+    const fullname = user_input.get('fullname') as string;
     const password = user_input.get('password') as string;
     console.table({
-      fullName,
+      fullname,
       email,
       password
     });
     try {
-      const response = await axios.post('/api/auth/signup', { email, fullName, password });
-      localStorage.setItem('token', response.data.token);
+      await axios.post('register', { email, fullname, password })
+                  .then(response => {
+                    console.log(response);
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
       navigate('/signin');
     } catch (error: any) {
       setError(error.response.data.message);
+      console.log(error);
     }
   };
 

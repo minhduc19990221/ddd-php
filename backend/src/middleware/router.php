@@ -8,9 +8,8 @@ use function D002834\Backend\middleware\handle_login_request;
 
 include_once __DIR__ . '/authentication.php';
 
-function handle_register_request(): void
+function handle_register_request($request_body): void
 {
-    global $request_body;
     $fullname = $request_body['fullname'];
     $email = $request_body['email'];
     $password = $request_body['password'];
@@ -18,11 +17,11 @@ function handle_register_request(): void
     $user_handler->register($fullname, $email, $password);
 }
 
-function register_routing($request_method): void
+function register_routing($request_method, $request_body): void
 {
     switch ($request_method) {
         case 'POST':
-            handle_register_request();
+            handle_register_request($request_body);
             break;
         default:
             http_response_code(405);
@@ -30,11 +29,11 @@ function register_routing($request_method): void
     }
 }
 
-function login_routing($request_method): void
+function login_routing($request_method, $request_body): void
 {
     switch ($request_method) {
         case 'POST':
-            handle_login_request();
+            handle_login_request($request_body);
             break;
         default:
             http_response_code(405);

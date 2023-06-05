@@ -18,7 +18,7 @@ class UserHandler
         try {
             $user = UserFactory::getInstance();
             $user->createOne($fullname, $email, $password);
-
+            http_response_code(200);
             header('Content-Type: application/json');
             echo json_encode(['message' => 'User created successfully']);
         } catch (Exception $e) {
@@ -28,15 +28,15 @@ class UserHandler
     }
 
     public function login($email, $password): bool
-{
-    try {
-        $user = UserRepository::getInstance();
-        return $user->userExists($email, $password);
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'An error occurred while logging in. Please try again later.']);
-        return false;
+    {
+        try {
+            $user = UserRepository::getInstance();
+            return $user->userExists($email, $password);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'An error occurred while logging in. Please try again later.']);
+            return false;
+        }
     }
-}
 }

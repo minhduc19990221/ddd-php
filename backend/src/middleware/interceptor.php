@@ -10,7 +10,7 @@ use function D002834\Backend\middleware\router\user_routing;
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-header("Access-Control-Allow-Headers: Access");
+header("Access-Control-Allow-Headers: Access, Content-Type, Authorization");
 
 define("REQUEST_METHOD", $_SERVER["REQUEST_METHOD"]);
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -24,9 +24,6 @@ if (str_starts_with($request_uri, $script_path)) {
 $request_uri = explode('/', trim($request_uri, '/'));
 define("REQUEST_URI", $request_uri);
 
-$request_body = json_decode(file_get_contents('php://input'), true);
-define("REQUEST_BODY", $request_body);
-
 $resource = array_shift($request_uri);
 define("RESOURCE", $resource);
 
@@ -34,12 +31,13 @@ include __DIR__ . "/router.php";
 
 // Use IIFE to avoid polluting global namespace
 (function ($resource, $request_method): void {
+    $request_body = json_decode(file_get_contents('php://input'), true);
     switch ($resource) {
         case 'login':
-            login_routing($request_method);
+            login_routing($request_method, $request_body);
             break;
         case 'register':
-            register_routing($request_method);
+            register_routing($request_method, $request_body);
             break;
         case 'users':
             user_routing($request_method);

@@ -6,10 +6,10 @@ class FullNameField extends Component {
     return (
       <TextField
         autoComplete="name"
-        name="fullName"
+        name="fullname"
         required
         fullWidth
-        id="fullName"
+        id="fullname"
         label="Full Name"
         autoFocus
       />

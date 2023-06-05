@@ -48,9 +48,15 @@ export default function SignIn() {
       password,
     });
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      navigate('/profile');
+      await axios.post('login', { email, password })
+      .then(response => {
+        console.table(response);
+        localStorage.setItem('token', response.data.token);
+        navigate('/profile');
+      })
+      .catch(error => {
+        console.log(error);
+      });
     } catch (error: any) {
       setError(error.response.data.message);
     }
