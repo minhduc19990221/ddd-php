@@ -10,8 +10,7 @@ use Firebase\JWT\Key;
 
 function handle_login_request($request_body): void
 {
-    global $key;
-    $key = "your_secret_key";
+    $key = $_ENV['SECRET_KEY'];
     try {
         $email = $request_body['email'];
         $password = $request_body['password'];
@@ -46,9 +45,10 @@ function handle_login_request($request_body): void
 
 function validate_token(): bool
 {
-    global $key;
+    $key = $_ENV['SECRET_KEY'];
     $headers = apache_request_headers();
     $token = $headers['Authorization'];
+    $token = explode(" ", $token)[1];
     if ($token) {
         $decoded = JWT::decode($token, new Key($key, 'HS256'));
         if ($decoded->data->email && $decoded->data->password) {

@@ -39,4 +39,55 @@ class UserHandler
             return false;
         }
     }
+
+    public function update($fullname, $email): void
+    {
+        if (!$fullname || !$email) {
+            http_response_code(400);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Missing parameters']);
+            return;
+        }
+        try {
+            $user = UserRepository::getInstance();
+            $user->updateOne($fullname, $email);
+            http_response_code(200);
+            header('Content-Type: application/json');
+            echo json_encode(['message' => 'User updated successfully']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function getOne($email): array
+    {
+        if (!$email) {
+            http_response_code(400);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Missing parameters']);
+            return [];
+        }
+        try {
+            $user_repository = UserRepository::getInstance();
+            $user = $user_repository->readOne($email);
+            if (empty($user) || empty($user_repository)) {
+                http_response_code(404);
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'User not found']);
+                return [];
+            } else {
+                http_response_code(200);
+                header('Content-Type: application/json');
+                echo json_encode(['message' => 'User retrieved successfully', 'user' => $user]);
+                return $user;
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => $e->getMessage()]);
+            return [];
+        }
+    }
 }

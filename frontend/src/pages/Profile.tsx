@@ -1,8 +1,9 @@
 import { SetStateAction, useState } from 'react';
 import { Box, Grid, Typography, TextField, Button } from '@mui/material';
+import axios from 'axios';
 
 function Profile() {
-  const [name, setName] = useState('John Doe');
+  const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState('');
 
@@ -16,11 +17,20 @@ function Profile() {
     setNewName('');
   };
 
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    setName(newName);
-    setEditing(false);
-    setNewName('');
+    
+    await axios.put('users', { fullname: newName, email: localStorage.getItem('email') })
+    .then(response => {
+      console.log(response);
+      setName(newName);
+      setEditing(false);
+      setNewName('');
+    })
+    .catch(error => {
+      console.log(error);
+    }
+    );
   };
 
   const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -29,6 +39,7 @@ function Profile() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
     window.location.href = '/signin';
   };
 
@@ -69,6 +80,12 @@ function Profile() {
       </Grid>
     </Box>
   );
+}
+
+async function get_user_name() {
+  const user_fullname = await axios.get('users', { params: { email: localStorage.getItem('email') } })
+  console.log("user_fullname: ", user_fullname.data.fullname);
+  return user_fullname.data.fullname;
 }
 
 export default Profile;

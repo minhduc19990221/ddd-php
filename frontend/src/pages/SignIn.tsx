@@ -43,15 +43,12 @@ export default function SignIn() {
     const user_input = new FormData(event.currentTarget);
     const email = user_input.get('email') as string;
     const password = user_input.get('password') as string;
-    console.table({
-      email,
-      password,
-    });
     try {
       await axios.post('login', { email, password })
       .then(response => {
         console.table(response);
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('email', email);
         navigate('/profile');
       })
       .catch(error => {

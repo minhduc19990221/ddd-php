@@ -40,7 +40,7 @@ include __DIR__ . "/router.php";
             register_routing($request_method, $request_body);
             break;
         case 'users':
-            user_routing($request_method);
+            user_routing($request_method, $request_body);
             break;
         default:
             http_response_code(404);

@@ -10,14 +10,19 @@ class Database
     private static ?Database $instance = null;
     private PDO $connection;
 
-    private string $host = 'localhost';
-    private string $username = 'root';
-    private string $password = 'mduc1999';
-    private string $database = 'practice';
-    private string $charset = 'utf8mb4';
+    private string $host;
+    private string $username;
+    private string $password;
+    private string $database;
+    private string $charset;
 
     private function __construct()
     {
+        $this->host = $_ENV['DB_HOST'];
+        $this->username = $_ENV['DB_USERNAME'];
+        $this->password = $_ENV['DB_PASSWORD'];
+        $this->database = $_ENV['DB_DATABASE'];
+        $this->charset = $_ENV['DB_CHARSET'];
         $dsn = "mysql:host=$this->host;dbname=$this->database;charset=$this->charset";
         $opt = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
