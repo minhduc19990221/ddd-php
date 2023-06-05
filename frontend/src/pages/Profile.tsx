@@ -1,11 +1,17 @@
 import { SetStateAction, useState } from 'react';
 import { Box, Grid, Typography, TextField, Button } from '@mui/material';
 import axios from 'axios';
+import z from 'zod';
 
 function Profile() {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState('');
+
+  const schema = z.object({
+    name: z.string().min(1),
+  });
+
 
   const handleEdit = () => {
     setEditing(true);
@@ -19,7 +25,14 @@ function Profile() {
 
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    
+
+    // using zod to validate newName
+    try {
+      schema.parse({ name: newName });
+    } catch (error: any) {
+      alert("Invalid name");
+      return;
+    }
     await axios.put('users', { fullname: newName, email: localStorage.getItem('email') })
     .then(response => {
       console.log(response);

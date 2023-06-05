@@ -13,6 +13,7 @@ import EmailField from '../components/Email';
 import FullNameField from '../components/FullName';
 import PasswordField from '../components/Password';
 import axios from 'axios';
+import z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -42,11 +43,16 @@ export default function SignUp() {
     const email = user_input.get('email') as string;
     const fullname = user_input.get('fullname') as string;
     const password = user_input.get('password') as string;
-    console.table({
-      fullname,
-      email,
-      password
+    // validate email, fullname, and password
+    const schema = z.object({
+      email: z.string().email(),
+      fullname: z.string().min(1),
+      password: z.string().min(8),
     });
+    if(!schema.parse({ email, fullname, password })) {
+        alert("Invalid email, fullname, or password");
+        return;
+    }
     try {
       await axios.post('register', { email, fullname, password })
                   .then(response => {

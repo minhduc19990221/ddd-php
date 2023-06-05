@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailField from '../components/Email';
 import PasswordField from '../components/Password';
 import axios from 'axios';
+import z from 'zod';
 
 
 function Copyright(props: any) {
@@ -43,6 +44,15 @@ export default function SignIn() {
     const user_input = new FormData(event.currentTarget);
     const email = user_input.get('email') as string;
     const password = user_input.get('password') as string;
+    // validate input
+    const schema = z.object({
+      email: z.string().email(),
+      password: z.string().min(8),
+    });
+    if(!schema.parse({ email, password })) {
+        alert("Invalid email, fullname, or password");
+        return;
+    }
     try {
       await axios.post('login', { email, password })
       .then(response => {
