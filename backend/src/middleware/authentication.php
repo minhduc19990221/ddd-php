@@ -49,14 +49,17 @@ function validate_token(): bool
     $headers = apache_request_headers();
     $token = $headers['Authorization'];
     $token = explode(" ", $token)[1];
-    if ($token) {
+    if (!$token || strlen($token) < 1) {
+        return false;
+    }
+    try {
         $decoded = JWT::decode($token, new Key($key, 'HS256'));
         if ($decoded->data->email && $decoded->data->password) {
             return true;
-        } else {
-            return false;
         }
-    } else {
+    } catch (Exception $e) {
+        error_log($e->getMessage());
         return false;
     }
+    return true;
 }
