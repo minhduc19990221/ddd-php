@@ -49,9 +49,11 @@ export default function SignIn() {
       email: z.string().email(),
       password: z.string().min(8),
     });
-    if(!schema.parse({ email, password })) {
-        alert("Invalid email, fullname, or password");
-        return;
+    try {
+      schema.parse({ email, password });
+    } catch (error: any) {
+      alert("Invalid email, fullname, or password");
+      return;
     }
     try {
       await axios.post('login', { email, password })

@@ -49,9 +49,11 @@ export default function SignUp() {
       fullname: z.string().min(1),
       password: z.string().min(8),
     });
-    if(!schema.parse({ email, fullname, password })) {
-        alert("Invalid email, fullname, or password");
-        return;
+    try {
+      schema.parse({ email, password });
+    } catch (error: any) {
+      alert("Invalid email, fullname, or password");
+      return;
     }
     try {
       await axios.post('register', { email, fullname, password })
