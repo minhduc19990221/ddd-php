@@ -11,6 +11,8 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Access, Content-Type, Authorization");
+// Setting content security policy to protect against XSS
+header("Content-Security-Policy: default-src 'self'; script-src 'self' http://localhost:3000; connect-src 'self' http://localhost:8000;");
 
 define("REQUEST_METHOD", $_SERVER["REQUEST_METHOD"]);
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
