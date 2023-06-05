@@ -11,6 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Change directory into backend folder
+        run: cd backend
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
