@@ -22,25 +22,21 @@ class UserHandler
             header('Content-Type: application/json');
             echo json_encode(['message' => 'User created successfully']);
         } catch (Exception $e) {
-            // Handle the exception here
-            // For example, you can log the error or return an error response to the client
             header('Content-Type: application/json');
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
 
     public function login($email, $password): bool
-    {
-        try {
-            $user = UserRepository::getInstance();
-            define("USER", $user->userExists($email, $password));
-            return USER;
-        } catch (Exception $e) {
-            // Handle the exception here
-            // For example, you can log the error or return an error response to the client
-            header('Content-Type: application/json');
-            echo json_encode(['error' => $e->getMessage()]);
-            return false;
-        }
+{
+    try {
+        $user = UserRepository::getInstance();
+        return $user->userExists($email, $password);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'An error occurred while logging in. Please try again later.']);
+        return false;
     }
+}
 }

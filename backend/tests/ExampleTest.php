@@ -1,5 +1,4 @@
 <?php
-// tests/ExampleTest.php
 
 use PHPUnit\Framework\TestCase;
 

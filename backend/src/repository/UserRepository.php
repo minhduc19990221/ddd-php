@@ -4,6 +4,7 @@ namespace D002834\Backend\repository;
 
 
 use D002834\Backend\configs\Database;
+use Exception;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -48,41 +49,53 @@ class UserRepository
         $this->connection->exec($sql);
     }
 
-    public function read($limit, $offset): bool|PDOStatement
+    public function read($limit, $offset): array
     {
         $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
 
-        return $stmt;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function readOne($email): bool|PDOStatement
+    public function readOne($email): ?array
     {
-        $sql = "SELECT * FROM $this->table_name WHERE email = $email LIMIT 1;";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->id);
-        $stmt->execute();
+        try {
+            $sql = "SELECT * FROM $this->table_name WHERE email = :email LIMIT 1;";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
 
-        return $stmt;
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result === false) {
+                return null;
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'An error occurred while retrieving user data. Please try again later.']);
+            return null;
+        }
     }
 
     public function userExists($email, $password): bool
-{
-    try {
-        $sql = "SELECT COUNT(*) FROM $this->table_name WHERE email = :email AND password = :password LIMIT 1;";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':password', $password);
-        $stmt->execute();
+    {
+        try {
+            $sql = "SELECT COUNT(*) FROM $this->table_name WHERE email = :email AND password = :password LIMIT 1;";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':password', $password);
+            $stmt->execute();
 
-        return $stmt->fetchColumn() > 0;
-    } catch (PDOException $e) {
-        // handle the exception here
-        echo $e->getMessage();
-        return false;
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            // handle the exception here
+            echo $e->getMessage();
+            return false;
+        }
     }
-}
 
     public function createOne($fullname, $email, $password): bool|PDOStatement
     {
@@ -101,9 +114,10 @@ class UserRepository
 
     public function updateOne($fullname, $email): bool|PDOStatement
     {
-        $sql = "UPDATE $this->table_name SET fullname = $fullname WHERE email = $email";
+        $sql = "UPDATE $this->table_name SET fullname = :fullname WHERE email = :email";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->fullname);
+        $stmt->bindValue(':fullname', $fullname);
+        $stmt->bindValue(':email', $email);
         $stmt->execute();
 
         return $stmt;
@@ -111,9 +125,9 @@ class UserRepository
 
     public function deleteOne($email): bool|PDOStatement
     {
-        $sql = "DELETE FROM $this->table_name WHERE email = $email";
+        $sql = "DELETE FROM $this->table_name WHERE email = :email";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindValue(':email', $email);
         $stmt->execute();
 
         return $stmt;
