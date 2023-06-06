@@ -55,7 +55,7 @@ function user_routing($request_method, $request_body): void
             update_user_request($request_body);
             break;
         case 'GET':
-            get_user_request($request_body);
+            get_user_request();
             break;
         default:
             http_response_code(405);
@@ -72,9 +72,14 @@ function update_user_request($request_body): void
     $user_handler->update($fullname, $email);
 }
 
-function get_user_request($request_body): void
+function get_user_request(): void
 {
-    $email = $request_body['email'];
+    if (!isset($_GET['email'])) {
+        http_response_code(400);
+        echo json_encode(["message" => "Missing parameters"]);
+        return;
+    }
+    $email = $_GET['email'];
     $user_handler = new UserHandler();
     $user_handler->getOne($email);
 }

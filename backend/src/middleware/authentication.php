@@ -47,12 +47,18 @@ function validate_token(): bool
 {
     $key = $_ENV['SECRET_KEY'];
     $headers = apache_request_headers();
-    $token = $headers['Authorization'];
-    $token = explode(" ", $token)[1];
+    if (isset($headers['authorization'])) {
+        $token = $headers['authorization'];
+    } elseif (isset($headers['Authorization'])) {
+        $token = $headers['Authorization'];
+    } else {
+        $token = null;
+    }
     if (!$token || strlen($token) < 1) {
         return false;
     }
     try {
+        $token = explode(" ", $token)[1];
         $decoded = JWT::decode($token, new Key($key, 'HS256'));
         if ($decoded->data->email && $decoded->data->password) {
             return true;

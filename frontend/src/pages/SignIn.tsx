@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -13,8 +12,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailField from '../components/Email';
 import PasswordField from '../components/Password';
-import axios from 'axios';
 import z from 'zod';
+import axios_instance from '../utils/Interceptor';
 
 
 function Copyright(props: any) {
@@ -47,7 +46,7 @@ export default function SignIn() {
     // validate input
     const schema = z.object({
       email: z.string().email(),
-      password: z.string().min(8),
+      password: z.string(),
     });
     try {
       schema.parse({ email, password });
@@ -56,16 +55,18 @@ export default function SignIn() {
       return;
     }
     try {
-      await axios.post('login', { email, password })
-      .then(response => {
-        console.table(response);
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('email', email);
-        navigate('/profile');
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      await axios_instance.post('login', { email, password })
+        .then(response => {
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('email', email);
+          alert(response.data.message)
+        })
+        .then(() => {
+          navigate('/profile', { replace: true });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } catch (error: any) {
       setError(error.response.data.message);
     }

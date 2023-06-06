@@ -12,10 +12,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailField from '../components/Email';
 import FullNameField from '../components/FullName';
 import PasswordField from '../components/Password';
-import axios from 'axios';
 import z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios_instance from '../utils/Interceptor';
 
 function Copyright(props: any) {
   return (
@@ -46,24 +46,27 @@ export default function SignUp() {
     // validate email, fullname, and password
     const schema = z.object({
       email: z.string().email(),
-      fullname: z.string().min(1),
-      password: z.string().min(8),
+      fullname: z.string(),
+      password: z.string(),
     });
     try {
-      schema.parse({ email, password });
+      schema.parse({ email, password, fullname });
     } catch (error: any) {
       alert("Invalid email, fullname, or password");
       return;
     }
     try {
-      await axios.post('register', { email, fullname, password })
-                  .then(response => {
-                    console.log(response);
-                  })
-                  .catch(error => {
-                    console.log(error);
-                  });
-      navigate('/signin');
+      await axios_instance.post('register', { email, fullname, password })
+        .then(response => {
+          console.log(response);
+          alert("Register successfully");
+        })
+        .then(() => {
+          navigate('/');
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } catch (error: any) {
       setError(error.response.data.message);
       console.log(error);
@@ -91,7 +94,7 @@ export default function SignUp() {
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <FullNameField/>
+                <FullNameField />
               </Grid>
               <Grid item xs={12}>
                 <EmailField

@@ -1,12 +1,17 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Box, Grid, Typography, TextField, Button } from '@mui/material';
-import axios from 'axios';
 import z from 'zod';
+import axios_instance from '../utils/Interceptor';
+import axios from 'axios';
 
 function Profile() {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState('');
+
+  useEffect(() => {
+    get_user_name();
+  }, []);
 
   const schema = z.object({
     name: z.string().min(1),
@@ -33,17 +38,17 @@ function Profile() {
       alert("Invalid name");
       return;
     }
-    await axios.put('users', { fullname: newName, email: localStorage.getItem('email') })
-    .then(response => {
-      console.log(response);
-      setName(newName);
-      setEditing(false);
-      setNewName('');
-    })
-    .catch(error => {
-      console.log(error);
-    }
-    );
+    await axios_instance.put('users', { fullname: newName, email: localStorage.getItem('email') })
+      .then(response => {
+        console.log(response);
+        setName(newName);
+        setEditing(false);
+        setNewName('');
+      })
+      .catch(error => {
+        console.log(error);
+      }
+      );
   };
 
   const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -53,8 +58,29 @@ function Profile() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
-    window.location.href = '/signin';
+    window.location.href = '/';
   };
+
+  const get_user_name = async () => {
+    try {
+      await axios_instance.get('users', { params: { email: localStorage.getItem('email') } } )
+        .then(response => {
+          console.log("response: ", response)
+          setName(response.data.user.fullname);
+        })
+        .catch(error => {
+          console.log(error);
+          alert("Error getting user name");
+        });
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        // handleLogout();
+      } else {
+        alert('Error getting user name');
+      }
+      alert("Error getting user name");
+    }
+  }
 
   return (
     <Box sx={{ p: 4 }}>
@@ -93,12 +119,6 @@ function Profile() {
       </Grid>
     </Box>
   );
-}
-
-async function get_user_name() {
-  const user_fullname = await axios.get('users', { params: { email: localStorage.getItem('email') } })
-  console.log("user_fullname: ", user_fullname.data.fullname);
-  return user_fullname.data.fullname;
 }
 
 export default Profile;
