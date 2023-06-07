@@ -1,13 +1,13 @@
 <?php
 
-use D002834\Backend\handlers\users\UserHandler;
+use D002834\Backend\handlers\users\UserService;
 use D002834\Backend\repository\UserRepository;
 use D002834\Backend\utils\Helper;
 use PHPUnit\Framework\TestCase;
 
 class UserHandlerTest extends TestCase
 {
-    protected ?UserHandler $user_handler;
+    protected ?UserService $user_handler;
     protected ?Helper $helper;
 
     protected ?UserRepository $user_repository;
@@ -46,7 +46,7 @@ class UserHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->user_repository = UserRepository::getInstance();
-        $this->user_handler = new UserHandler();
+        $this->user_handler = new UserService();
         $this->helper = new Helper();
         $this->fullname = $this->helper->createMockName();
         $this->email = $this->helper->createMockEmail();

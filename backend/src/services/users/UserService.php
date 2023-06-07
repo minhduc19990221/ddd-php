@@ -7,7 +7,7 @@ use D002834\Backend\repository\UserRepository;
 use Exception;
 
 
-class UserHandler
+class UserService
 {
     public function __construct()
     {

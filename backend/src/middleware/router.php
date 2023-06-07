@@ -3,7 +3,7 @@
 namespace D002834\Backend\middleware\router;
 
 
-use D002834\Backend\handlers\users\UserHandler;
+use D002834\Backend\handlers\users\UserService;
 use function D002834\Backend\middleware\handle_login_request;
 use function D002834\Backend\middleware\validate_token;
 
@@ -14,7 +14,7 @@ function handle_register_request($request_body): void
     $fullname = $request_body['fullname'];
     $email = $request_body['email'];
     $password = $request_body['password'];
-    $user_handler = new UserHandler();
+    $user_handler = new UserService();
     $user_handler->register($fullname, $email, $password);
 }
 
@@ -68,7 +68,7 @@ function update_user_request($request_body): void
 {
     $fullname = $request_body['fullname'];
     $email = $request_body['email'];
-    $user_handler = new UserHandler();
+    $user_handler = new UserService();
     $user_handler->update($fullname, $email);
 }
 
@@ -80,6 +80,6 @@ function get_user_request(): void
         return;
     }
     $email = $_GET['email'];
-    $user_handler = new UserHandler();
+    $user_handler = new UserService();
     $user_handler->getOne($email);
 }

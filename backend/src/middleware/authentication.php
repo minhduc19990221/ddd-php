@@ -2,7 +2,7 @@
 
 namespace D002834\Backend\middleware;
 
-use D002834\Backend\handlers\users\UserHandler;
+use D002834\Backend\handlers\users\UserService;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -14,7 +14,7 @@ function handle_login_request($request_body): void
     try {
         $email = $request_body['email'];
         $password = $request_body['password'];
-        $user_handler = new UserHandler();
+        $user_handler = new UserService();
         $user = $user_handler->login($email, $password);
         if (!$user) {
             header("HTTP/1.1 404 Not Found");
