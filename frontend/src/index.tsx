@@ -1,7 +1,5 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './index.css';
 import SignIn from './pages/SignIn';
 import reportWebVitals from './reportWebVitals';
 import SignUp from './pages/SignUp';
@@ -13,8 +11,7 @@ const root = document.getElementById('root');
 if (root) {
   const rootElement = ReactDOM.createRoot(root);
   rootElement.render(
-    <React.StrictMode>
-      <BrowserRouter>
+    <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
@@ -23,7 +20,6 @@ if (root) {
           {/* <Route path="/contact" element={<Contact />} /> */}
         </Routes>
       </BrowserRouter>
-    </React.StrictMode>
   );
 }
 
