@@ -1,120 +1,161 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import Board, { moveCard } from "@lourenci/react-kanban";
-import "@lourenci/react-kanban/dist/styles.css";
-// Use your own styles to override the default styles
-// import "./styles.css";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const board = {
-  columns: [
-    {
-      id: 1,
-      title: "Backlog",
-      cards: [
-        {
-          id: 1,
-          title: "Card title 1",
-          description: "Card content"
-        },
-        {
-          id: 2,
-          title: "Card title 2",
-          description: "Card content"
-        },
-        {
-          id: 3,
-          title: "Card title 3",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: "Doing",
-      cards: [
-        {
-          id: 9,
-          title: "Card title 9",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 3,
-      title: "Q&A",
-      cards: [
-        {
-          id: 10,
-          title: "Card title 10",
-          description: "Card content"
-        },
-        {
-          id: 11,
-          title: "Card title 11",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 4,
-      title: "Production",
-      cards: [
-        {
-          id: 12,
-          title: "Card title 12",
-          description: "Card content"
-        },
-        {
-          id: 13,
-          title: "Card title 13",
-          description: "Card content"
-        }
-      ]
-    }
-  ]
+// fake data generator
+const getItems = (count, offset = 0) =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k + offset}-${new Date().getTime()}`,
+    content: `item ${k + offset}`
+  }));
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
 };
 
-function ControlledBoard() {
-  // You need to control the state yourself.
-  const [controlledBoard, setBoard] = useState(board);
+/**
+ * Moves an item from one list to another list.
+ */
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
 
-  function handleCardMove(_card, source, destination) {
-    const updatedBoard = moveCard(controlledBoard, source, destination);
-    setBoard(updatedBoard);
+  destClone.splice(droppableDestination.index, 0, removed);
+
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+
+  return result;
+};
+const grid = 8;
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: "none",
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+
+  // change background colour if dragging
+  background: isDragging ? "lightgreen" : "grey",
+
+  // styles we need to apply on draggables
+  ...draggableStyle
+});
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  padding: grid,
+  width: 250
+});
+
+export default function BoardPage() {
+  const [state, setState] = useState([getItems(10), getItems(5, 10)]);
+
+  function onDragEnd(result) {
+    const { source, destination } = result;
+
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
+
+    if (sInd === dInd) {
+      const items = reorder(state[sInd], source.index, destination.index);
+      const newState: any = [...state];
+      newState[sInd] = items;
+      setState(newState);
+    } else {
+      const result = move(state[sInd], state[dInd], source, destination);
+      const newState = [...state];
+      newState[sInd] = result[sInd];
+      newState[dInd] = result[dInd];
+
+      setState(newState.filter(group => group.length));
+    }
   }
 
   return (
-    <Board onCardDragEnd={handleCardMove} disableColumnDrag>
-      {controlledBoard}
-    </Board>
-  );
-}
-
-function UncontrolledBoard() {
-  return (
-    <Board
-      allowRemoveLane
-      allowRenameColumn
-      allowRemoveCard
-      onLaneRemove={console.log}
-      onCardRemove={console.log}
-      onLaneRename={console.log}
-      initialBoard={board}
-      allowAddCard={{ on: "top" }}
-      onNewCardConfirm={draftCard => ({
-        id: new Date().getTime(),
-        ...draftCard
-      })}
-      onCardNew={console.log}
-    />
-  );
-}
-
-export default function BoardPage() {
-  return (
-    <>
-      <h4>Task Management Application Board</h4>
-      <UncontrolledBoard /> 
-    </>
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          setState([...state, []]);
+        }}
+      >
+        Add new group
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setState([...state, getItems(1)]);
+        }}
+      >
+        Add new item
+      </button>
+      <div style={{ display: "flex" }}>
+        <DragDropContext onDragEnd={onDragEnd}>
+          {state.map((el, ind) => (
+            <Droppable key={ind} droppableId={`${ind}`}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  style={getListStyle(snapshot.isDraggingOver)}
+                  {...provided.droppableProps}
+                >
+                  {el.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around"
+                            }}
+                          >
+                            {item.content}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newState = [...state];
+                                newState[ind].splice(index, 1);
+                                setState(
+                                  newState.filter(group => group.length)
+                                );
+                              }}
+                            >
+                              delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </DragDropContext>
+      </div>
+    </div>
   );
 }
