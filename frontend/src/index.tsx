@@ -6,6 +6,7 @@ import SignIn from './pages/SignIn';
 import reportWebVitals from './reportWebVitals';
 import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
+import BoardPage from './pages/Board';
 
 
 const root = document.getElementById('root');
@@ -18,6 +19,7 @@ if (root) {
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/demo" element={<BoardPage />} />
           {/* <Route path="/contact" element={<Contact />} /> */}
         </Routes>
       </BrowserRouter>

@@ -67,7 +67,6 @@ class UserHandler
             http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'Missing parameters']);
-            return [];
         }
         try {
             $user_repository = UserRepository::getInstance();
