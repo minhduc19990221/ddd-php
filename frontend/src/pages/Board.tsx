@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
+
 // fake data generator
-const getItems = (count, offset = 0) =>
+const getItems = (count: number, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map(k => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
     content: `item ${k + offset}`
   }));
 
-const reorder = (list, startIndex, endIndex) => {
+const reorder = (list: Iterable<unknown> | ArrayLike<unknown>, startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -20,7 +21,7 @@ const reorder = (list, startIndex, endIndex) => {
 /**
  * Moves an item from one list to another list.
  */
-const move = (source, destination, droppableSource, droppableDestination) => {
+const move = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Iterable<unknown> | ArrayLike<unknown>, droppableSource: { index: number; droppableId: string | number; }, droppableDestination: { index: number; droppableId: string | number; }) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -35,7 +36,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (isDragging: any, draggableStyle: any) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: grid * 2,
@@ -47,7 +48,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // styles we need to apply on draggables
   ...draggableStyle
 });
-const getListStyle = isDraggingOver => ({
+const getListStyle = (isDraggingOver: any) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: grid,
   width: 250
@@ -56,7 +57,7 @@ const getListStyle = isDraggingOver => ({
 export default function BoardPage() {
   const [state, setState] = useState([getItems(10), getItems(5, 10)]);
 
-  function onDragEnd(result) {
+  function onDragEnd(result: { source: any; destination: any; }) {
     const { source, destination } = result;
 
     // dropped outside the list
@@ -103,7 +104,7 @@ export default function BoardPage() {
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
-              {(provided, snapshot) => (
+              {(provided: { innerRef: React.LegacyRef<HTMLDivElement>; droppableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal; }, snapshot: { isDraggingOver: any; }) => (
                 <div
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
@@ -115,7 +116,7 @@ export default function BoardPage() {
                       draggableId={item.id}
                       index={index}
                     >
-                      {(provided, snapshot) => (
+                      {(provided: { innerRef: React.LegacyRef<HTMLDivElement>; draggableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; dragHandleProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; }, snapshot: { isDragging: any; }) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
