@@ -3,7 +3,7 @@
 namespace D002834\Backend\middleware\router;
 
 
-use D002834\Backend\handlers\users\UserService;
+use D002834\Backend\services\users\UserService;
 use function D002834\Backend\middleware\handle_login_request;
 use function D002834\Backend\middleware\validate_token;
 

@@ -63,7 +63,7 @@ function Profile() {
 
   const get_user_name = async () => {
     try {
-      await axios_instance.get('users', { params: { email: localStorage.getItem('email') } } )
+      await axios_instance.get('users', { params: { email: localStorage.getItem('email') } })
         .then(response => {
           console.log("response: ", response)
           setName(response.data.user.fullname);
@@ -74,11 +74,9 @@ function Profile() {
         });
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
-        // handleLogout();
-      } else {
+        handleLogout();
         alert('Error getting user name');
       }
-      alert("Error getting user name");
     }
   }
 

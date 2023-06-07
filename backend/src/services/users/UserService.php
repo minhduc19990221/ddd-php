@@ -1,6 +1,6 @@
 <?php
 
-namespace D002834\Backend\handlers\users;
+namespace D002834\Backend\services\users;
 
 use D002834\Backend\interface\users\UserFactory;
 use D002834\Backend\repository\UserRepository;
