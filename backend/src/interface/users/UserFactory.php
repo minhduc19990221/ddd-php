@@ -2,7 +2,7 @@
 
 namespace D002834\Backend\interface\users;
 
-use D002834\Backend\repository\UserRepository;
+use D002834\Backend\domain\repository\UserRepository;
 
 class UserFactory implements IUserFactory
 {

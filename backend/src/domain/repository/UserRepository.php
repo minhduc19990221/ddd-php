@@ -1,9 +1,9 @@
 <?php
 
-namespace D002834\Backend\repository;
+namespace D002834\Backend\domain\repository;
 
 
-use D002834\Backend\configs\Database;
+use D002834\Backend\infrastructure\Database;
 use Exception;
 use PDO;
 use PDOException;

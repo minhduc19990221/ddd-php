@@ -2,8 +2,8 @@
 
 namespace D002834\Backend\services\users;
 
+use D002834\Backend\domain\repository\UserRepository;
 use D002834\Backend\interface\users\UserFactory;
-use D002834\Backend\repository\UserRepository;
 use Exception;
 
 

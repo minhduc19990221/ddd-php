@@ -1,8 +1,8 @@
 <?php
 
-namespace D002834\Backend\model;
+namespace D002834\Backend\domain\entity;
 
-class Card
+class Board
 {
     private int $id;
     private string $title;

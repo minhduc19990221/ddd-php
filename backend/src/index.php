@@ -11,5 +11,5 @@ if (file_exists($dotenvPath)) {
     echo 'Error: .env file not found';
 }
 
-require __DIR__ . '/middleware/interceptor.php';
+require __DIR__ . '/interface/middleware/interceptor.php';
 
