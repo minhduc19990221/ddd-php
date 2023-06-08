@@ -51,7 +51,7 @@ class Database
         return $this->connection;
     }
 
-    public function createDatabase($db_name): void
+    public function createDatabase(string $db_name): void
     {
         try {
             $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
@@ -62,7 +62,7 @@ class Database
         }
     }
 
-    public function createTable($db_name, $table_name): void
+    public function createTable(string $db_name, string $table_name): void
     {
         try {
             $this->connection->exec("USE $db_name");

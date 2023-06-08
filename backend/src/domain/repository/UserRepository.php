@@ -49,7 +49,7 @@ class UserRepository
         $this->connection->exec($sql);
     }
 
-    public function read($limit, $offset): array
+    public function read(int $limit, int $offset): array
     {
         $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
         $stmt = $this->connection->prepare($sql);
@@ -58,7 +58,7 @@ class UserRepository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function readOne($email): ?array
+    public function readOne(string $email): ?array
     {
         try {
             $sql = "SELECT * FROM $this->table_name WHERE email = :email LIMIT 1;";
@@ -80,7 +80,7 @@ class UserRepository
         }
     }
 
-    public function userExists($email, $password): bool
+    public function userExists(string $email, string $password): bool
     {
         try {
             $sql = "SELECT COUNT(*) FROM $this->table_name WHERE email = :email AND password = :password LIMIT 1;";
@@ -97,7 +97,7 @@ class UserRepository
         }
     }
 
-    public function createOne($fullname, $email, $password): bool|PDOStatement
+    public function createOne(string $fullname, string $email, string $password): bool|PDOStatement
     {
         $this->fullname = $fullname;
         $this->email = $email;
@@ -112,7 +112,7 @@ class UserRepository
         return $stmt;
     }
 
-    public function updateOne($fullname, $email): bool|PDOStatement
+    public function updateOne(string $fullname, string $email): bool|PDOStatement
     {
         $sql = "UPDATE $this->table_name SET fullname = :fullname WHERE email = :email";
         $stmt = $this->connection->prepare($sql);
@@ -123,7 +123,7 @@ class UserRepository
         return $stmt;
     }
 
-    public function deleteOne($email): bool|PDOStatement
+    public function deleteOne(string $email): bool|PDOStatement
     {
         $sql = "DELETE FROM $this->table_name WHERE email = :email";
         $stmt = $this->connection->prepare($sql);

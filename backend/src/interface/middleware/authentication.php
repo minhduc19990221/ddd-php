@@ -8,7 +8,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 
-function handle_login_request($request_body): void
+function handle_login_request(array $request_body): void
 {
     $key = $_ENV['SECRET_KEY'];
     try {

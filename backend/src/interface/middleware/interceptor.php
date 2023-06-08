@@ -32,7 +32,7 @@ define("RESOURCE", $resource);
 include __DIR__ . "/router.php";
 
 // Use IIFE to avoid polluting global namespace
-(function ($resource, $request_method): void {
+(function (string $resource, string $request_method): void {
     $request_body = json_decode(file_get_contents('php://input'), true);
     switch ($resource) {
         case 'login':

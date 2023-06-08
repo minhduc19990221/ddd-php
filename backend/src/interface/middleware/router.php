@@ -9,7 +9,7 @@ use function D002834\Backend\middleware\validate_token;
 
 include_once __DIR__ . '/authentication.php';
 
-function handle_register_request($request_body): void
+function handle_register_request(array $request_body): void
 {
     $fullname = $request_body['fullname'];
     $email = $request_body['email'];
@@ -18,7 +18,7 @@ function handle_register_request($request_body): void
     $user_handler->register($fullname, $email, $password);
 }
 
-function register_routing($request_method, $request_body): void
+function register_routing(string $request_method, array $request_body): void
 {
     switch ($request_method) {
         case 'POST':
@@ -30,7 +30,7 @@ function register_routing($request_method, $request_body): void
     }
 }
 
-function login_routing($request_method, $request_body): void
+function login_routing(string $request_method, array $request_body): void
 {
     switch ($request_method) {
         case 'POST':
@@ -42,7 +42,7 @@ function login_routing($request_method, $request_body): void
     }
 }
 
-function user_routing($request_method, $request_body): void
+function user_routing(string $request_method, array $request_body): void
 {
     $is_authenticated = validate_token();
     if (!$is_authenticated) {
@@ -64,7 +64,7 @@ function user_routing($request_method, $request_body): void
 }
 
 
-function update_user_request($request_body): void
+function update_user_request(array $request_body): void
 {
     $fullname = $request_body['fullname'];
     $email = $request_body['email'];

@@ -23,7 +23,7 @@ class UserFactory implements IUserFactory
         return self::$instance;
     }
 
-    public function createOne($fullname, $email, $password): void
+    public function createOne(string $fullname, string $email, string $password): void
     {
         self::$user_repository->createOne($fullname, $email, $password);
     }

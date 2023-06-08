@@ -13,7 +13,7 @@ class UserService
     {
     }
 
-    public static function register($fullname, $email, $password): void
+    public static function register(string $fullname, string $email, string $password): void
     {
         try {
             $user = UserFactory::getInstance();
@@ -27,7 +27,7 @@ class UserService
         }
     }
 
-    public function login($email, $password): bool
+    public function login(string $email, string $password): bool
     {
         try {
             $user = UserRepository::getInstance();
@@ -40,7 +40,7 @@ class UserService
         }
     }
 
-    public function update($fullname, $email): void
+    public function update(string $fullname, string $email): void
     {
         if (!$fullname || !$email) {
             http_response_code(400);
@@ -61,7 +61,7 @@ class UserService
         }
     }
 
-    public function getOne($email): array
+    public function getOne(string $email): array
     {
         if (!$email) {
             http_response_code(400);
