@@ -16,7 +16,7 @@ class Authentication
         $this->key = $key;
     }
 
-    public function handle_login_request(array $request_body): void
+    public function login(array $request_body): void
     {
         $email = $request_body['email'] ?? null;
         $password = $request_body['password'] ?? null;
@@ -43,7 +43,7 @@ class Authentication
         echo json_encode(['message' => 'User logged in successfully', 'token' => $jwt]);
     }
 
-    public function validate_token(): bool
+    public function validateToken(): bool
     {
         $headers = apache_request_headers();
         $token = $headers['authorization'] ?? $headers['Authorization'] ?? null;

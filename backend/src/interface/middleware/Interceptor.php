@@ -2,6 +2,8 @@
 
 namespace D002834\Backend\interface\middleware;
 
+use D002834\Backend\middleware\router\Router;
+
 class Interceptor
 {
     public function __construct()
@@ -32,26 +34,25 @@ class Interceptor
         $resource = array_shift($request_uri);
         define("RESOURCE", $resource);
 
-        include __DIR__ . "/router.php";
+        $request_body = json_decode(file_get_contents('php://input'), true);
 
-        // Use IIFE to avoid polluting global namespace
-        (function (string $resource, string $request_method): void {
-            $request_body = json_decode(file_get_contents('php://input'), true);
-            switch ($resource) {
-                case 'login':
-                    login_routing($request_method, $request_body);
-                    break;
-                case 'register':
-                    register_routing($request_method, $request_body);
-                    break;
-                case 'users':
-                    user_routing($request_method, $request_body);
-                    break;
-                default:
-                    http_response_code(404);
-                    echo json_encode(["message" => "Resource not found"]);
-            }
-        })(RESOURCE, REQUEST_METHOD);
+
+        $router = new Router();
+
+        switch ($resource) {
+            case 'login':
+                $router->loginRouting(REQUEST_METHOD, $request_body);
+                break;
+            case 'register':
+                $router->registerRouting(REQUEST_METHOD, $request_body);
+                break;
+            case 'users':
+                $router->userRouting(REQUEST_METHOD, $request_body);
+                break;
+            default:
+                http_response_code(404);
+                echo json_encode(["message" => "Resource not found"]);
+        }
     }
 }
 
