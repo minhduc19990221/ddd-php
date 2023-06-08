@@ -2,8 +2,6 @@
 
 namespace D002834\Backend\interface\middleware;
 
-use D002834\Backend\middleware\router\Router;
-
 class Interceptor
 {
     public function __construct()
@@ -34,7 +32,7 @@ class Interceptor
         $resource = array_shift($request_uri);
         define("RESOURCE", $resource);
 
-        $request_body = json_decode(file_get_contents('php://input'), true);
+        $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
 
 
         $router = new Router();

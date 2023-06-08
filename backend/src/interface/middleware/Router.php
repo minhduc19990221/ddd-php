@@ -1,8 +1,7 @@
 <?php
 
-namespace D002834\Backend\middleware\router;
+namespace D002834\Backend\interface\middleware;
 
-use D002834\Backend\interface\middleware\Authentication;
 use D002834\Backend\services\users\UserService;
 
 include_once __DIR__ . '/Authentication.php';
