@@ -30,11 +30,12 @@ class BoardRepository
     public function createTable(): void
     {
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
-            id         INT PRIMARY KEY auto_increment NOT NULL,
-            title      VARCHAR(255) NOT NULL,
-            content    VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                title VARCHAR(255) NOT NULL,
+                creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                board_id INT,
+                FOREIGN KEY(board_id) REFERENCES Boards(id)
         )";
 
         $this->connection->exec($sql);
