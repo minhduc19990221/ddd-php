@@ -91,7 +91,6 @@ class UserRepository
 
             return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
-            // handle the exception here
             echo $e->getMessage();
             return false;
         }

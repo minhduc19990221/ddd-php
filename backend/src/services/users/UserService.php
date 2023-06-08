@@ -4,40 +4,36 @@ namespace D002834\Backend\services\users;
 
 use D002834\Backend\domain\repository\UserRepository;
 use D002834\Backend\interface\users\UserFactory;
-use Exception;
 
 
 class UserService
 {
-    public function __construct()
-    {
-    }
 
     public static function register(string $fullname, string $email, string $password): void
     {
-        try {
-            $user = UserFactory::getInstance();
-            $user->createOne($fullname, $email, $password);
-            http_response_code(200);
+        if (!$fullname || !$email || !$password) {
+            http_response_code(400);
             header('Content-Type: application/json');
-            echo json_encode(['message' => 'User created successfully']);
-        } catch (Exception $e) {
-            header('Content-Type: application/json');
-            echo json_encode(['error' => $e->getMessage()]);
+            echo json_encode(['error' => 'Missing parameters']);
+            return;
         }
+        $user = UserFactory::getInstance();
+        $user->createOne($fullname, $email, $password);
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode(['message' => 'User created successfully']);
     }
 
     public function login(string $email, string $password): bool
     {
-        try {
-            $user = UserRepository::getInstance();
-            return $user->userExists($email, $password);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
+        if (!$email || !$password) {
+            http_response_code(400);
             header('Content-Type: application/json');
-            echo json_encode(['error' => 'An error occurred while logging in. Please try again later.']);
+            echo json_encode(['error' => 'Missing parameters']);
             return false;
         }
+        $user = UserRepository::getInstance();
+        return $user->userExists($email, $password);
     }
 
     public function update(string $fullname, string $email): void
@@ -48,45 +44,44 @@ class UserService
             echo json_encode(['error' => 'Missing parameters']);
             return;
         }
-        try {
-            $user = UserRepository::getInstance();
-            $user->updateOne($fullname, $email);
-            http_response_code(200);
-            header('Content-Type: application/json');
-            echo json_encode(['message' => 'User updated successfully']);
-        } catch (Exception $e) {
-            http_response_code(500);
-            header('Content-Type: application/json');
-            echo json_encode(['error' => $e->getMessage()]);
-        }
+        $this->isUserExisted($email);
+        $user = UserRepository::getInstance();
+        $user->updateOne($fullname, $email);
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode(['message' => 'User updated successfully']);
     }
 
-    public function getOne(string $email): array
+    private function isUserExisted(string $email): bool
     {
         if (!$email) {
             http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'Missing parameters']);
+            return false;
         }
-        try {
-            $user_repository = UserRepository::getInstance();
-            $user = $user_repository->readOne($email);
-            if (empty($user) || empty($user_repository)) {
-                http_response_code(404);
-                header('Content-Type: application/json');
-                echo json_encode(['error' => 'User not found']);
-                return [];
-            } else {
-                http_response_code(200);
-                header('Content-Type: application/json');
-                echo json_encode(['message' => 'User retrieved successfully', 'user' => $user]);
-                return $user;
-            }
-        } catch (Exception $e) {
-            http_response_code(500);
+        $user_repository = UserRepository::getInstance();
+        $user = $user_repository->readOne($email);
+        if (empty($user)) {
+            http_response_code(404);
             header('Content-Type: application/json');
-            echo json_encode(['error' => $e->getMessage()]);
+            echo json_encode(['error' => 'User not found']);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function getOne(string $email): array
+    {
+        if (!$this->isUserExisted($email)) {
             return [];
         }
+        $user_repository = UserRepository::getInstance();
+        $user = $user_repository->readOne($email);
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode(['message' => 'User retrieved successfully', 'user' => $user]);
+        return $user;
     }
 }
