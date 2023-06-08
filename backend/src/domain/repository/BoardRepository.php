@@ -32,8 +32,8 @@ class BoardRepository
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 title VARCHAR(255) NOT NULL,
-                creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-                update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 board_id INT,
                 FOREIGN KEY(board_id) REFERENCES Boards(id)
         )";
@@ -50,12 +50,12 @@ class BoardRepository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function readOne(string $title): ?array
+    public function readOne(int $id): ?array
     {
         try {
-            $sql = "SELECT * FROM $this->table_name WHERE title = :title";
+            $sql = "SELECT * FROM $this->table_name WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);

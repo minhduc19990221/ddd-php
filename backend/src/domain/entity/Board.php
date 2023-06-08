@@ -6,17 +6,11 @@ class Board
 {
     private int $id;
     private string $title;
-    private string $description;
-    private string $created_at;
-    private string $updated_at;
 
-    public function __construct(int $id, string $title, string $description, string $created_at, string $updated_at)
+    public function __construct(int $id, string $title)
     {
         $this->id = $id;
         $this->title = $title;
-        $this->description = $description;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
     }
 
     public function getId(): int
@@ -29,19 +23,11 @@ class Board
         return htmlspecialchars($this->title);
     }
 
-    public function getDescription(): string
+    public function toArray(): array
     {
-        return htmlspecialchars($this->description);
+        return [
+            'id' => $this->id,
+            'title' => $this->title
+        ];
     }
-
-    public function getCreatedAt(): string
-    {
-        return $this->created_at;
-    }
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updated_at;
-    }
-
 }
