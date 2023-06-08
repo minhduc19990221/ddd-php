@@ -95,17 +95,11 @@ class UserRepository
 
     public function createOne(string $fullname, string $email, string $password): bool|PDOStatement
     {
-        $fullname = '';
-        $fullname1 = $fullname;
-        $email = '';
-        $email1 = $email;
-        $password = '';
-        $password1 = $password;
         $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES (:fullname, :email, :password)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue(':fullname', $fullname1);
-        $stmt->bindValue(':email', $email1);
-        $stmt->bindValue(':password', $password1);
+        $stmt->bindValue(':fullname', $fullname);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':password', $password);
         $stmt->execute();
 
         return $stmt;
