@@ -2,7 +2,7 @@
 
 namespace D002834\Backend\interface\middleware;
 
-use D002834\Backend\services\users\UserService;
+use D002834\Backend\application\services\users\UserService;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;

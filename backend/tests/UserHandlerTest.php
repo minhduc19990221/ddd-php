@@ -1,7 +1,7 @@
 <?php
 
+use D002834\Backend\application\services\users\UserService;
 use D002834\Backend\domain\repository\UserRepository;
-use D002834\Backend\services\users\UserService;
 use D002834\Backend\utils\Helper;
 use PHPUnit\Framework\TestCase;
 
