@@ -1,7 +1,7 @@
 <?php
 
+use D002834\Backend\application\users\factory\UserFactory;
 use D002834\Backend\domain\repository\UserRepository;
-use D002834\Backend\interface\users\UserFactory;
 use D002834\Backend\utils\Helper;
 use PHPUnit\Framework\TestCase;
 

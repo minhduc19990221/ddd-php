@@ -1,6 +1,6 @@
 <?php
 
-namespace D002834\Backend\interface\users;
+namespace D002834\Backend\application\users\factory;
 
 interface IUserFactory
 {

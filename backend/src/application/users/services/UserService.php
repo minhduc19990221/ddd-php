@@ -1,9 +1,9 @@
 <?php
 
-namespace D002834\Backend\application\services\users;
+namespace D002834\Backend\application\users\services;
 
+use D002834\Backend\application\users\factory\UserFactory;
 use D002834\Backend\domain\repository\UserRepository;
-use D002834\Backend\interface\users\UserFactory;
 
 
 class UserService
