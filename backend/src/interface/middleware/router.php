@@ -7,7 +7,7 @@ use D002834\Backend\services\users\UserService;
 use function D002834\Backend\middleware\handle_login_request;
 use function D002834\Backend\middleware\validate_token;
 
-include_once __DIR__ . '/authentication.php';
+include_once __DIR__ . '/Authentication.php';
 
 function handle_register_request(array $request_body): void
 {
