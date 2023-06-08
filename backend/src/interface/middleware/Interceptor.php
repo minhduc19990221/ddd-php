@@ -6,13 +6,15 @@ class Interceptor
 {
     public function __construct()
     {
+        $client = $_ENV['CLIENT'];
+        $server = $_ENV['SERVER'];
         // Overwrite header to avoid CORS error when integration testing
         header("Content-Type: application/json");
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
         header("Access-Control-Allow-Headers: Access, Content-Type, Authorization");
         // Setting content security policy to protect against XSS
-        header("Content-Security-Policy: default-src 'self'; script-src 'self' http://localhost:3000; connect-src 'self' http://localhost:8000;");
+        header("Content-Security-Policy: default-src 'self'; script-src 'self' $client; connect-src 'self' $server;");
     }
 
     public function handleRequest(): void
