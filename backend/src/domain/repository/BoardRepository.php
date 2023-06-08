@@ -66,13 +66,12 @@ class BoardRepository
         return null;
     }
 
-    public function create(string $title, string $content): void
+    public function create(string $title): void
     {
         try {
-            $sql = "INSERT INTO $this->table_name (title, content) VALUES (:title, :content)";
+            $sql = "INSERT INTO $this->table_name (title) VALUES (:title)";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':content', $content);
             $stmt->execute();
         } catch (\PDOException $e) {
             echo $e->getMessage();
