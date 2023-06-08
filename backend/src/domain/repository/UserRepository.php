@@ -14,9 +14,6 @@ class UserRepository
 {
     private static ?UserRepository $instance = null;
     public int $id;
-    private string $fullname = '';
-    private string $email = '';
-    private string $password = '';
     private PDO $connection;
     private string $table_name = "users";
 
@@ -98,14 +95,17 @@ class UserRepository
 
     public function createOne(string $fullname, string $email, string $password): bool|PDOStatement
     {
-        $this->fullname = $fullname;
-        $this->email = $email;
-        $this->password = $password;
+        $fullname = '';
+        $fullname1 = $fullname;
+        $email = '';
+        $email1 = $email;
+        $password = '';
+        $password1 = $password;
         $sql = "INSERT INTO $this->table_name (fullname, email, password) VALUES (:fullname, :email, :password)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue(':fullname', $this->fullname);
-        $stmt->bindValue(':email', $this->email);
-        $stmt->bindValue(':password', $this->password);
+        $stmt->bindValue(':fullname', $fullname1);
+        $stmt->bindValue(':email', $email1);
+        $stmt->bindValue(':password', $password1);
         $stmt->execute();
 
         return $stmt;
