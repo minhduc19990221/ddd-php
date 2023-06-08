@@ -3,6 +3,7 @@
 namespace D002834\Backend\application\users\services;
 
 use D002834\Backend\application\users\factory\UserFactory;
+use D002834\Backend\domain\entity\User;
 use D002834\Backend\domain\repository\UserRepository;
 
 
@@ -72,16 +73,18 @@ class UserService
         }
     }
 
-    public function getOne(string $email): array
+    public function getOne(string $email): User|null
     {
         if (!$this->isUserExisted($email)) {
-            return [];
+            return null;
         }
         $user_repository = UserRepository::getInstance();
-        $user = $user_repository->readOne($email);
+        $user_record = $user_repository->readOne($email);
+        $user = new User($user_record['fullname'], $user_record['email'], $user_record['password']);
+        $result = $user->toArray();
         http_response_code(200);
         header('Content-Type: application/json');
-        echo json_encode(['message' => 'User retrieved successfully', 'user' => $user]);
+        echo json_encode(['message' => 'User retrieved successfully', 'user' => $result]);
         return $user;
     }
 }

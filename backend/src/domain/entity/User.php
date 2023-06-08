@@ -30,4 +30,12 @@ class User
         return $this->password;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'fullname' => $this->fullname,
+            'email' => $this->email,
+        ];
+    }
+
 }
