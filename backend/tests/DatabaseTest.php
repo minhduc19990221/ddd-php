@@ -1,6 +1,6 @@
 <?php
 
-use D002834\Backend\infrastructure\Database;
+use Backend\infrastructure\Database;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase

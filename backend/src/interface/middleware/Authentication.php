@@ -1,8 +1,8 @@
 <?php
 
-namespace D002834\Backend\interface\middleware;
+namespace Backend\interface\middleware;
 
-use D002834\Backend\application\users\services\UserService;
+use Backend\application\users\services\UserService;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;

@@ -1,8 +1,8 @@
 <?php
 
-namespace D002834\Backend\domain\repository;
+namespace Backend\domain\repository;
 
-use D002834\Backend\infrastructure\Database;
+use Backend\infrastructure\Database;
 use PDO;
 
 class BoardRepository

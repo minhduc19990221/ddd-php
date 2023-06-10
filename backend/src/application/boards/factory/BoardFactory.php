@@ -1,8 +1,8 @@
 <?php
 
-namespace D002834\Backend\application\boards\factory;
+namespace Backend\application\boards\factory;
 
-use D002834\Backend\domain\repository\BoardRepository;
+use Backend\domain\repository\BoardRepository;
 
 class BoardFactory implements IBoardFactory
 {
@@ -18,7 +18,7 @@ class BoardFactory implements IBoardFactory
 
     public static function getInstance(): ?BoardFactory
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new BoardFactory();
         }
         return self::$instance;

@@ -1,10 +1,10 @@
 <?php
 
-namespace D002834\Backend\application\boards\services;
+namespace Backend\application\boards\services;
 
-use D002834\Backend\application\boards\factory\BoardFactory;
-use D002834\Backend\domain\entity\Board;
-use D002834\Backend\domain\repository\BoardRepository;
+use Backend\application\boards\factory\BoardFactory;
+use Backend\domain\entity\Board;
+use Backend\domain\repository\BoardRepository;
 
 class BoardService
 {

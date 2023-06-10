@@ -1,6 +1,6 @@
 <?php
 
-namespace D002834\Backend\utils;
+namespace Backend\utils;
 
 class Helper
 {

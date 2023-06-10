@@ -1,6 +1,6 @@
 <?php
 
-namespace D002834\Backend\domain\entity;
+namespace Backend\domain\entity;
 
 class Board
 {

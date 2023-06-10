@@ -1,8 +1,8 @@
 <?php
 
-namespace D002834\Backend\application\users\factory;
+namespace Backend\application\users\factory;
 
-use D002834\Backend\domain\repository\UserRepository;
+use Backend\domain\repository\UserRepository;
 
 class UserFactory implements IUserFactory
 {
@@ -17,7 +17,7 @@ class UserFactory implements IUserFactory
 
     public static function getInstance(): ?UserFactory
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new UserFactory();
         }
         return self::$instance;

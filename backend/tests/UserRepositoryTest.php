@@ -1,7 +1,7 @@
 <?php
 
-use D002834\Backend\domain\repository\UserRepository;
-use D002834\Backend\utils\Helper;
+use Backend\domain\repository\UserRepository;
+use Backend\utils\Helper;
 use PHPUnit\Framework\TestCase;
 
 class UserRepositoryTest extends TestCase
