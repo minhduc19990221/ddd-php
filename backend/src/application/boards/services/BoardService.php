@@ -2,9 +2,10 @@
 
 namespace Backend\application\boards\services;
 
-use Backend\application\boards\factory\BoardFactory;
-use Backend\domain\entity\Board;
-use Backend\domain\repository\BoardRepository;
+
+use Application\boards\factory\BoardFactory;
+use Domain\entity\Board;
+use Domain\repository\BoardRepository;
 use Utils\ResponseSender;
 
 class BoardService

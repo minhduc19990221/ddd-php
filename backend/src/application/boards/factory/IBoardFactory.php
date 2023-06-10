@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\application\boards\factory;
+namespace Application\boards\factory;
 interface IBoardFactory
 {
     public function createOne(string $title);

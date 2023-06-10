@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\domain\repository;
+namespace Domain\repository;
 
 use Backend\infrastructure\Database;
 use PDO;

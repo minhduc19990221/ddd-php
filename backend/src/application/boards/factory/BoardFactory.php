@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\application\boards\factory;
+namespace Application\boards\factory;
 
 use Backend\domain\repository\BoardRepository;
 
