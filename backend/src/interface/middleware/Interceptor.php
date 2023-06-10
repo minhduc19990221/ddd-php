@@ -1,6 +1,6 @@
 <?php
 
-namespace D002834\Backend\interface\middleware;
+namespace Backend\interface\middleware;
 
 class Interceptor
 {
