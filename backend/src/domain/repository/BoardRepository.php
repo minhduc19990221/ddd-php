@@ -4,6 +4,7 @@ namespace Backend\domain\repository;
 
 use Backend\infrastructure\Database;
 use PDO;
+use PDOException;
 
 class BoardRepository
 {
@@ -59,7 +60,7 @@ class BoardRepository
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
 
@@ -73,7 +74,7 @@ class BoardRepository
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
             $stmt->execute();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
@@ -86,7 +87,7 @@ class BoardRepository
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':content', $content);
             $stmt->execute();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
@@ -98,7 +99,7 @@ class BoardRepository
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
             $stmt->execute();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
@@ -111,7 +112,7 @@ class BoardRepository
             $stmt->execute();
 
             return $stmt->fetchColumn();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
 
