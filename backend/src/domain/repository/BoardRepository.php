@@ -2,7 +2,7 @@
 
 namespace Domain\repository;
 
-use Backend\infrastructure\Database;
+use Infrastructure\Database;
 use PDO;
 use PDOException;
 
@@ -22,7 +22,7 @@ class BoardRepository
 
     public static function getInstance(): ?BoardRepository
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new BoardRepository();
         }
         return self::$instance;
@@ -45,10 +45,7 @@ class BoardRepository
     public function read(int $limit, int $offset): array
     {
         $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $this->connection->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
 
     public function readOne(int $id): ?array
@@ -108,14 +105,10 @@ class BoardRepository
     {
         try {
             $sql = "SELECT COUNT(*) FROM $this->table_name";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->execute();
-
-            return $stmt->fetchColumn();
+            return $this->connection->query($sql)->fetchColumn();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
         return 0;
     }
 }

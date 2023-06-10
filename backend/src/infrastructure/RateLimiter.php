@@ -1,8 +1,6 @@
 <?php
 
-namespace Backend\infrastructure;
-
-require "vendor/autoload.php";
+namespace Infrastructure;
 
 use Exception;
 use Predis\Autoloader;
@@ -34,8 +32,8 @@ class RateLimiter
     public function rateLimit(string $ip_address): void
     {
         try {
-            // Leveraging Redis' atomic transactions to increment and expire the key in one operation.
-            // This prevents potential race conditions where the key's count could be incremented but not
+            // Leveraging Redis' atomic transactions to increment and expire the ip_address in one operation.
+            // This prevents potential race conditions where the ip_address's count could be incremented but not
             // expired if the script execution was interrupted.
             $this->redis->multi();
             $this->redis->incr($ip_address);
@@ -47,9 +45,12 @@ class RateLimiter
             // We're using a simple comparison to check if the rate limit has been exceeded.
             // This is efficient and easy to understand.
             if ($count > $this->limit) {
-                echo "Rate limit exceeded. Try again later.";
-            } else {
-                echo "Request successful.";
+                $error_response = [
+                    'is_rate_exceeded' => true,
+                    'message' => 'Rate limit exceeded. Try again later.'
+                ];
+                echo json_encode($error_response, JSON_THROW_ON_ERROR);
+                exit();
             }
         } catch (Exception $e) {
             echo "Could not connect to Redis. Error: {$e->getMessage()}";

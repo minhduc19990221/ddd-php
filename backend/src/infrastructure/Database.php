@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\infrastructure;
+namespace Infrastructure;
 
 use PDO;
 use PDOException;

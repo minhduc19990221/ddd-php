@@ -2,7 +2,7 @@
 
 namespace Backend\interface\middleware;
 
-use Backend\infrastructure\RateLimiter;
+use Infrastructure\RateLimiter;
 use Utils\ResponseSender;
 
 class Interceptor
@@ -25,7 +25,7 @@ class Interceptor
         // Setting content security policy to protect against XSS
         header("Content-Security-Policy: default-src 'self'; script-src 'self' $client; connect-src 'self' $server;");
     }
-    
+
     public function handleRequest(): void
     {
         define("REQUEST_METHOD", $_SERVER["REQUEST_METHOD"]);

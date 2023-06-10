@@ -3,8 +3,8 @@
 namespace Backend\domain\repository;
 
 
-use Backend\infrastructure\Database;
 use Exception;
+use Infrastructure\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
