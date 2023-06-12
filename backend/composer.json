@@ -3,7 +3,12 @@
   "description": "Backend Environment for practice project",
   "autoload": {
     "psr-4": {
-      "Backend\\": "src/"
+      "Backend\\": "src/",
+      "Utils\\": "src/utils/",
+      "Interface\\": "src/interface/",
+      "Domain\\": "src/domain/",
+      "Infrastructure\\": "src/infrastructure/",
+      "Application\\": "src/application/"
     }
   },
   "require": {
@@ -16,8 +21,7 @@
     "predis/predis": "^2.1"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest"
-    ,
+    "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^10.2"
   }
 }
