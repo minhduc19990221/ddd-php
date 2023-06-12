@@ -177,6 +177,14 @@ class Router
             case 'GET':
                 $this->getCardRequest();
                 break;
+            case 'PUT':
+                $this->isRequestBodyEmpty($requestBody);
+                $this->updateCardRequest($requestBody);
+                break;
+            case 'DELETE':
+                $this->isRequestBodyEmpty($requestBody);
+                $this->deleteCardRequest($requestBody);
+                break;
             default:
                 ResponseSender::sendErrorResponse(405, "Method not allowed");
         }
@@ -197,5 +205,21 @@ class Router
         $cardHandler = new CardService();
         $result = $cardHandler->getAll($board_id);
         ResponseSender::sendSuccessResponse(200, $result);
+    }
+
+    private function updateCardRequest(array $requestBody): void
+    {
+        $id = $requestBody['id'];
+        $title = $requestBody['title'];
+        $index_board = $requestBody['index_board'];
+        $cardHandler = new CardService();
+        $cardHandler->updateOne($id, $title, $index_board);
+    }
+
+    private function deleteCardRequest(array $requestBody): void
+    {
+        $id = $requestBody['id'];
+        $cardHandler = new CardService();
+        $cardHandler->deleteOne($id);
     }
 }

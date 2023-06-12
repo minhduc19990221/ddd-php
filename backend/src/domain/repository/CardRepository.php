@@ -84,25 +84,26 @@ class CardRepository
         }
     }
 
-    public function update(string $title, string $content): void
+    public function update(int $id, string $title, int $index_board): void
     {
         try {
-            $sql = "UPDATE $this->table_name SET content = :content WHERE title = :title";
+            $sql = "UPDATE $this->table_name SET title = :title, index_board = :index_board WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':index_board', $index_board);
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
 
-    public function delete(string $title): void
+    public function delete(int $id): void
     {
         try {
-            $sql = "DELETE FROM $this->table_name WHERE title = :title";
+            $sql = "DELETE FROM $this->table_name WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();

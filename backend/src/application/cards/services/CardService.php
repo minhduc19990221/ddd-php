@@ -67,4 +67,38 @@ class CardService
         }
         return $cards;
     }
+
+    public function updateOne(int $id, string $title, int $index_board): void
+    {
+        if (!$id || !$title || !$index_board) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            return;
+        }
+
+        $card_repository = CardRepository::getInstance();
+        if ($card_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            return;
+        }
+
+        $card_repository->update($id, $title, $index_board);
+        ResponseSender::sendSuccessResponse(200, ['message' => 'Card updated successfully']);
+    }
+
+    public function deleteOne(int $id): void
+    {
+        if (!$id) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            return;
+        }
+
+        $card_repository = CardRepository::getInstance();
+        if ($card_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            return;
+        }
+
+        $card_repository->delete($id);
+        ResponseSender::sendSuccessResponse(200, ['message' => 'Card deleted successfully']);
+    }
 }
