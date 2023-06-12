@@ -7,7 +7,7 @@ use JsonException;
 class ResponseSender
 {
 
-    public function sendErrorResponse(string $message, int $code): void
+    public static function sendErrorResponse(string $message, int $code): void
     {
         header('Content-Type: application/json');
         http_response_code($code);
@@ -20,9 +20,9 @@ class ResponseSender
         }
     }
 
-    public function sendSuccessResponse(string $message): void
+    public static function sendSuccessResponse(int $code, string $message): void
     {
-        http_response_code(200);
+        http_response_code($code);
         try {
             echo json_encode(['message' => $message], JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {

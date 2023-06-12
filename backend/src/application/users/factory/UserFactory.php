@@ -1,8 +1,9 @@
 <?php
 
-namespace Backend\application\users\factory;
+namespace Application\users\factory;
 
-use Backend\domain\repository\UserRepository;
+
+use Domain\repository\UserRepository;
 
 class UserFactory implements IUserFactory
 {

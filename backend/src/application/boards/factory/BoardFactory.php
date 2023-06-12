@@ -2,7 +2,8 @@
 
 namespace Application\boards\factory;
 
-use Backend\domain\repository\BoardRepository;
+
+use Domain\repository\BoardRepository;
 
 class BoardFactory implements IBoardFactory
 {

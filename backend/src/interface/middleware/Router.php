@@ -1,23 +1,20 @@
 <?php
 
-namespace Backend\interface\middleware;
+namespace Interface\middleware;
 
 
-use Backend\application\users\services\UserService;
-
-include_once __DIR__ . '/Authentication.php';
+use Application\users\services\UserService;
+use Backend\interface\middleware\Authentication;
+use Utils\ResponseSender;
 
 class Router
 {
     public function registerRouting(string $requestMethod, array $requestBody): void
     {
-        switch ($requestMethod) {
-            case 'POST':
-                $this->handleRegisterRequest($requestBody);
-                break;
-            default:
-                http_response_code(405);
-                echo json_encode(["message" => "Method not allowed"]);
+        if ($requestMethod === 'POST') {
+            $this->handleRegisterRequest($requestBody);
+        } else {
+            ResponseSender::sendErrorResponse(405, "Method not allowed");
         }
     }
 
@@ -26,8 +23,7 @@ class Router
         $fullname = $requestBody['fullname'];
         $email = $requestBody['email'];
         $password = $requestBody['password'];
-        $userHandler = new UserService();
-        $userHandler->register($fullname, $email, $password);
+        UserService::register($fullname, $email, $password);
     }
 
     public function loginRouting(string $requestMethod, array $requestBody): void
@@ -37,8 +33,7 @@ class Router
                 $this->handleLoginRequest($requestBody);
                 break;
             default:
-                http_response_code(405);
-                echo json_encode(["message" => "Method not allowed"]);
+                ResponseSender::sendErrorResponse(405, "Method not allowed");
         }
     }
 
@@ -52,8 +47,7 @@ class Router
     {
         $isAuthenticated = $this->validateToken();
         if (!$isAuthenticated) {
-            http_response_code(401);
-            echo json_encode(["message" => "Unauthorized"]);
+            ResponseSender::sendErrorResponse(401, "Unauthorized");
             return;
         }
         switch ($requestMethod) {
@@ -64,16 +58,14 @@ class Router
                 $this->getUserRequest();
                 break;
             default:
-                http_response_code(405);
-                echo json_encode(["message" => "Method not allowed"]);
+                ResponseSender::sendErrorResponse(405, "Method not allowed");
         }
     }
 
     private function validateToken(): bool
     {
 
-        $auth = new Authentication($_ENV['JWT_SECRET']);
-        return $auth->validateToken();
+        return (new Authentication($_ENV['JWT_SECRET']))->validateToken();
     }
 
     private function updateUserRequest(array $requestBody): void
@@ -87,8 +79,7 @@ class Router
     private function getUserRequest(): void
     {
         if (!isset($_GET['email'])) {
-            http_response_code(400);
-            echo json_encode(["message" => "Missing parameters"]);
+            ResponseSender::sendErrorResponse(400, "Missing parameters");
             return;
         }
         $email = $_GET['email'];

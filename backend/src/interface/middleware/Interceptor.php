@@ -3,18 +3,16 @@
 namespace Backend\interface\middleware;
 
 use Infrastructure\RateLimiter;
+use Interface\middleware\Router;
 use Utils\ResponseSender;
 
 class Interceptor
 {
     private RateLimiter $rate_limiter;
 
-    private ResponseSender $response_sender;
-
-    public function __construct(RateLimiter $rate_limiter, ResponseSender $response_sender)
+    public function __construct(RateLimiter $rate_limiter)
     {
         $this->rate_limiter = $rate_limiter;
-        $this->response_sender = $response_sender;
         $client = $_ENV['CLIENT'];
         $server = $_ENV['SERVER'];
         // Overwrite header to avoid CORS error when integration testing
@@ -60,12 +58,12 @@ class Interceptor
                 $router->userRouting(REQUEST_METHOD, $request_body);
                 break;
             default:
-                $this->response_sender->sendErrorResponse("Resource not found", 404);
+                ResponseSender::sendErrorResponse("Resource not found", 404);
         }
     }
 }
 
 // Usage:
 $rate_limiter = new RateLimiter($_ENV['REQUEST_LIMIT'], $_ENV['TIME_PERIOD']);
-$interceptor = new Interceptor($rate_limiter, new ResponseSender());
+$interceptor = new Interceptor($rate_limiter);
 $interceptor->handleRequest();

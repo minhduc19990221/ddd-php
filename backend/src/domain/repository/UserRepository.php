@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\domain\repository;
+namespace Domain\repository;
 
 
 use Exception;
@@ -25,7 +25,7 @@ class UserRepository
 
     public static function getInstance(): ?UserRepository
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new UserRepository();
         }
         return self::$instance;
@@ -72,7 +72,7 @@ class UserRepository
         } catch (Exception $e) {
             error_log($e->getMessage());
             header('Content-Type: application/json');
-            echo json_encode(['error' => 'An error occurred while retrieving user data. Please try again later.']);
+            echo json_encode(['error' => 'An error occurred while retrieving user data. Please try again later.'], JSON_THROW_ON_ERROR);
             return null;
         }
     }

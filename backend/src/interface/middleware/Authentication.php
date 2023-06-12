@@ -2,10 +2,11 @@
 
 namespace Backend\interface\middleware;
 
-use Backend\application\users\services\UserService;
+use Application\users\services\UserService;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Utils\ResponseSender;
 
 class Authentication
 {
@@ -24,8 +25,7 @@ class Authentication
         $user = $user_handler->login($email, $password);
         if (!$user) {
             header("HTTP/1.1 404 Not Found");
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'User not found']);
+            ResponseSender::sendErrorResponse(404, "User not found");
             return;
         }
         $account = [
@@ -40,14 +40,14 @@ class Authentication
         $jwt = JWT::encode($payload, $this->key, "HS256");  //generate the token
         header('Content-Type: application/json');
         header("HTTP/1.1 200 OK");
-        echo json_encode(['message' => 'User logged in successfully', 'token' => $jwt]);
+        echo json_encode(['message' => 'User logged in successfully', 'token' => $jwt], JSON_THROW_ON_ERROR);
     }
 
     public function validateToken(): bool
     {
         $headers = apache_request_headers();
         $token = $headers['authorization'] ?? $headers['Authorization'] ?? null;
-        if (!$token || strlen($token) < 1) {
+        if (!$token) {
             return false;
         }
         try {
