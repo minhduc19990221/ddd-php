@@ -78,13 +78,13 @@ class BoardRepository
         }
     }
 
-    public function update(string $title, string $email): void
+    public function update(string $title, string $id): void
     {
         try {
-            $sql = "UPDATE $this->table_name SET title = :title WHERE email = :email";
+            $sql = "UPDATE $this->table_name SET title = :title WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();
