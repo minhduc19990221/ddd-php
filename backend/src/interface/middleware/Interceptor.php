@@ -41,7 +41,7 @@ class Interceptor
         $resource = array_shift($request_uri);
         define("RESOURCE", $resource);
 
-        $request_body = json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR) ?? [];
+        $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
 
 
         $router = new Router();
