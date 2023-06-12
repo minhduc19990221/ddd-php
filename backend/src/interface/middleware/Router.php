@@ -36,12 +36,19 @@ class Router
 
     public function loginRouting(string $requestMethod, array $requestBody): void
     {
-        switch ($requestMethod) {
-            case 'POST':
-                $this->handleLoginRequest($requestBody);
-                break;
-            default:
-                ResponseSender::sendErrorResponse(405, "Method not allowed");
+        if ($requestMethod === 'POST') {
+            $this->isRequestBodyEmpty($requestBody);
+            $this->handleLoginRequest($requestBody);
+        } else {
+            ResponseSender::sendErrorResponse(405, "Method not allowed");
+        }
+    }
+
+    private function isRequestBodyEmpty(array $requestBody): void
+    {
+        if (empty($requestBody)) {
+            ResponseSender::sendErrorResponse(400, "Missing parameters");
+            exit();
         }
     }
 
@@ -59,6 +66,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'PUT':
+                $this->isRequestBodyEmpty($requestBody);
                 $this->updateUserRequest($requestBody);
                 break;
             case 'GET':
@@ -103,6 +111,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'POST':
+                $this->isRequestBodyEmpty($requestBody);
                 $this->createBoardRequest($requestBody);
                 break;
             case 'GET':
@@ -136,6 +145,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'POST':
+                $this->isRequestBodyEmpty($requestBody);
                 $this->createCardRequest($requestBody);
                 break;
             case 'GET':
