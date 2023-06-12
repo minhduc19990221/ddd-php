@@ -133,7 +133,8 @@ class Router
     {
         $id = $_GET['id'];
         $boardHandler = new BoardService();
-        $boardHandler->getOne($id);
+        $result = $boardHandler->getOne($id);
+        ResponseSender::sendSuccessResponse(200, $result);
     }
 
     public function cardRouting(string $requestMethod, array $requestBody): void
