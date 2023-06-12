@@ -17,13 +17,9 @@ class ResponseSender
         echo json_encode(['error' => $message], JSON_THROW_ON_ERROR);
     }
 
-    public static function sendSuccessResponse(int $code, string $message): void
+    public static function sendSuccessResponse(int $code, array $message): void
     {
         http_response_code($code);
-        try {
-            echo json_encode(['message' => $message], JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            var_dump($e->getMessage());
-        }
+        echo json_encode($message, JSON_THROW_ON_ERROR);
     }
 }

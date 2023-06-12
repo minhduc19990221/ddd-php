@@ -24,7 +24,6 @@ class Authentication
         $user_handler = new UserService();
         $user = $user_handler->login($email, $password);
         if (!$user) {
-            header("HTTP/1.1 404 Not Found");
             ResponseSender::sendErrorResponse(404, "User not found");
             return;
         }
@@ -38,9 +37,7 @@ class Authentication
             "data" => $account  //Data related to the signer user
         );
         $jwt = JWT::encode($payload, $this->key, "HS256");  //generate the token
-        header('Content-Type: application/json');
-        header("HTTP/1.1 200 OK");
-        echo json_encode(['message' => 'User logged in successfully', 'token' => $jwt], JSON_THROW_ON_ERROR);
+        ResponseSender::sendSuccessResponse(200, ["message" => "Login successfully", "token" => $jwt]);
     }
 
     public function validateToken(): bool

@@ -71,7 +71,6 @@ class UserRepository
             return $result;
         } catch (Exception $e) {
             error_log($e->getMessage());
-            header('Content-Type: application/json');
             echo json_encode(['error' => 'An error occurred while retrieving user data. Please try again later.'], JSON_THROW_ON_ERROR);
             return null;
         }

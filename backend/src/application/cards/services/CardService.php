@@ -22,7 +22,7 @@ class CardService
             return;
         }
         $card->createOne($title);
-        ResponseSender::sendSuccessResponse(201, 'Card created successfully');
+        ResponseSender::sendSuccessResponse(201, ['message' => 'Card created successfully']);
     }
 
     public function getOne(int $id): ?Card

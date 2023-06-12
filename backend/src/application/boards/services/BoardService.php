@@ -22,7 +22,7 @@ class BoardService
             return;
         }
         $board->createOne($title);
-        ResponseSender::sendSuccessResponse(201, 'Board created successfully');
+        ResponseSender::sendSuccessResponse(201, ['message' => 'Board created successfully']);
     }
 
     public function getOne(int $id): ?Board
