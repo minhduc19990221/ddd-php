@@ -133,8 +133,9 @@ class Router
     private function createBoardRequest(array $requestBody): void
     {
         $title = $requestBody['title'];
+        $email = $requestBody['email'];
         $boardHandler = new BoardService();
-        $boardHandler->create($title);
+        $boardHandler->create($title, $email);
     }
 
     private function getBoardRequest(): void

@@ -25,9 +25,9 @@ class BoardFactory implements IBoardFactory
         return self::$instance;
     }
 
-    public function createOne(string $title): void
+    public function createOne(string $title, string $email): void
     {
-        self::$board_repository->create($title);
+        self::$board_repository->create($title, $email);
     }
 
 }

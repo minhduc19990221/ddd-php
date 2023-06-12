@@ -3,5 +3,5 @@
 namespace Application\boards\factory;
 interface IBoardFactory
 {
-    public function createOne(string $title);
+    public function createOne(string $title, string $email): void;
 }

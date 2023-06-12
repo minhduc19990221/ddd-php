@@ -9,9 +9,9 @@ use Utils\ResponseSender;
 
 class BoardService
 {
-    public function create(string $title): void
+    public function create(string $title, string $email): void
     {
-        if (!$title) {
+        if (!$title || !$email) {
             ResponseSender::sendErrorResponse(400, 'Missing parameters');
             return;
         }
@@ -20,7 +20,7 @@ class BoardService
             ResponseSender::sendErrorResponse(500, 'Internal server error');
             return;
         }
-        $board->createOne($title);
+        $board->createOne($title, $email);
         ResponseSender::sendSuccessResponse(201, ['message' => 'Board created successfully']);
     }
 
