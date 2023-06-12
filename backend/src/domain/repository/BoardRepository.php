@@ -46,7 +46,8 @@ class BoardRepository
         $sql = "SELECT * FROM $this->table_name WHERE email = :email";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':email', $email);
-        return $this->connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function readOne(int $id): ?array

@@ -140,9 +140,9 @@ class Router
 
     private function getBoardRequest(): void
     {
-        $id = $_GET['id'];
+        $email = $_GET['email'];
         $boardHandler = new BoardService();
-        $result = $boardHandler->getOne($id);
+        $result = $boardHandler->getAll($email);
         ResponseSender::sendSuccessResponse(200, $result);
     }
 

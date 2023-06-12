@@ -54,10 +54,12 @@ class BoardService
             exit();
         }
 
-        $board_records = $board_repository->readAll($email);
+        $board_records = $board_repository->read($email);
         $boards = [];
-        foreach ($board_records as $board_record) {
-            $boards[] = (new Board($board_record['id'], $board_record['title']))->toArray();
+        if (count($board_records) > 0) {
+            foreach ($board_records as $board_record) {
+                $boards[] = (new Board($board_record['id'], $board_record['title']))->toArray();
+            }
         }
         return $boards;
     }
