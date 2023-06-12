@@ -17,7 +17,7 @@ class BoardRepository
     private function __construct()
     {
         $db = Database::getInstance();
-        $this->connection = $db->getConnection();
+        $this->connection = $db?->getConnection();
     }
 
     public static function getInstance(): ?BoardRepository
@@ -33,18 +33,19 @@ class BoardRepository
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 title VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                board_id INT,
-                FOREIGN KEY(board_id) REFERENCES Boards(id)
-        )";
+                FOREIGN KEY (email) REFERENCES users(email))";
 
         $this->connection->exec($sql);
     }
 
-    public function read(int $limit, int $offset): array
+    public function read(string $email): array
     {
-        $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
+        $sql = "SELECT * FROM $this->table_name WHERE email = :email";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':email', $email);
         return $this->connection->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -64,25 +65,26 @@ class BoardRepository
         return null;
     }
 
-    public function create(string $title): void
+    public function create(string $title, string $email): void
     {
         try {
-            $sql = "INSERT INTO $this->table_name (title) VALUES (:title)";
+            $sql = "INSERT INTO $this->table_name (title, email) VALUES (:title, :email)";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
 
-    public function update(string $title, string $content): void
+    public function update(string $title, string $email): void
     {
         try {
-            $sql = "UPDATE $this->table_name SET content = :content WHERE title = :title";
+            $sql = "UPDATE $this->table_name SET title = :title WHERE email = :email";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();

@@ -40,4 +40,25 @@ class BoardService
         $board_record = $board_repository->readOne($id);
         return (new Board($board_record['id'], $board_record['title']))->toArray();
     }
+
+    public function getAll(string $email): array
+    {
+        if (!$email) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            exit();
+        }
+
+        $board_repository = BoardRepository::getInstance();
+        if ($board_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            exit();
+        }
+
+        $board_records = $board_repository->readAll($email);
+        $boards = [];
+        foreach ($board_records as $board_record) {
+            $boards[] = (new Board($board_record['id'], $board_record['title']))->toArray();
+        }
+        return $boards;
+    }
 }
