@@ -12,7 +12,6 @@ class ResponseSender
      */
     public static function sendErrorResponse(int $code, string $message): void
     {
-        header('Content-Type: application/json');
         http_response_code($code);
         echo json_encode(['error' => $message], JSON_THROW_ON_ERROR);
     }

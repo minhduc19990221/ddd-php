@@ -40,7 +40,6 @@ class UserService
         $this->isUserExisted($email);
         $user = UserRepository::getInstance();
         $user->updateOne($fullname, $email);
-        header('Content-Type: application/json');
         ResponseSender::sendSuccessResponse(200, ['message' => 'User updated successfully']);
     }
 
