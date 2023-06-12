@@ -9,25 +9,25 @@ class DatabaseTest extends TestCase
 
     protected ?Database $db_test;
 
-    public function testConnection()
+    public function testConnection(): void
     {
         $this->assertInstanceOf(PDO::class, $this->db->getConnection());
     }
 
-    public function testGetInstance()
+    public function testGetInstance(): void
     {
         $this->assertInstanceOf(Database::class, $this->db);
         $this->assertSame($this->db, $this->db_test, 'The two instances of the database should be the same.');
     }
 
-    public function testCreateDatabase()
+    public function testCreateDatabase(): void
     {
         $db_name = 'test_db';
         $this->db->createDatabase($db_name);
         $this->assertContains($db_name, $this->db->getConnection()->query("SHOW DATABASES")->fetchAll(PDO::FETCH_COLUMN));
     }
 
-    public function testCreateTable()
+    public function testCreateTable(): void
     {
         $db_name = 'test_db';
         $table_name = 'test_table';
