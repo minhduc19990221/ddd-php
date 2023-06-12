@@ -7,12 +7,12 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, internal-network ]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Change directory into backend folder
         run: cd backend
 
