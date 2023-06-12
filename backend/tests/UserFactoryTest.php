@@ -1,8 +1,9 @@
 <?php
 
-use Backend\application\users\factory\UserFactory;
-use Backend\domain\repository\UserRepository;
+
+use Application\users\factory\UserFactory;
 use Backend\utils\Helper;
+use Domain\repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
 class UserFactoryTest extends TestCase

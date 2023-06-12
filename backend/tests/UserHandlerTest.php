@@ -1,8 +1,9 @@
 <?php
 
-use Backend\application\users\services\UserService;
-use Backend\domain\repository\UserRepository;
+
+use Application\users\services\UserService;
 use Backend\utils\Helper;
+use Domain\repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
 class UserHandlerTest extends TestCase
