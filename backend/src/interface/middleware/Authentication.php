@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\interface\middleware;
+namespace Interface\middleware;
 
 use Application\users\services\UserService;
 use Exception;

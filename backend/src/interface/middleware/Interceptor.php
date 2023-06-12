@@ -3,6 +3,7 @@
 namespace Backend\interface\middleware;
 
 use Infrastructure\RateLimiter;
+use Interface\middleware\Authentication;
 use Interface\middleware\Router;
 use Utils\ResponseSender;
 
@@ -44,7 +45,7 @@ class Interceptor
         $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
 
 
-        $router = new Router();
+        $router = new Router(new Authentication($_ENV["JWT_SECRET"]));
         $this->rate_limiter->rateLimit($_SERVER['REMOTE_ADDR']);
 
         switch ($resource) {
@@ -56,6 +57,12 @@ class Interceptor
                 break;
             case 'users':
                 $router->userRouting(REQUEST_METHOD, $request_body);
+                break;
+            case 'boards':
+                $router->boardRouting(REQUEST_METHOD, $request_body);
+                break;
+            case 'cards':
+                $router->cardRouting(REQUEST_METHOD, $request_body);
                 break;
             default:
                 ResponseSender::sendErrorResponse("Resource not found", 404);

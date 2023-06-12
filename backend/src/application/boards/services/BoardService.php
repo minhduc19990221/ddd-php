@@ -1,7 +1,6 @@
 <?php
 
-namespace Backend\application\boards\services;
-
+namespace Application\boards\services;
 
 use Application\boards\factory\BoardFactory;
 use Domain\entity\Board;
