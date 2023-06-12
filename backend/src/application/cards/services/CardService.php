@@ -10,9 +10,9 @@ use Utils\ResponseSender;
 
 class CardService
 {
-    public function create(string $title): void
+    public function create(string $title, int $board_id, int $index_board): void
     {
-        if (!$title) {
+        if (!$title || !$board_id || !$index_board) {
             ResponseSender::sendErrorResponse(400, 'Missing parameters');
             return;
         }
@@ -21,7 +21,7 @@ class CardService
             ResponseSender::sendErrorResponse(500, 'Internal server error');
             return;
         }
-        $card->createOne($title);
+        $card->createOne($title, $board_id, $index_board);
         ResponseSender::sendSuccessResponse(201, ['message' => 'Card created successfully']);
     }
 
@@ -40,5 +40,31 @@ class CardService
 
         $card_record = $card_repository->readOne($id);
         return new Card($card_record['id'], $card_record['title'], $card_record['description']);
+    }
+
+    public function getAll(int $board_id): array
+    {
+        if (!$board_id) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            exit();
+        }
+
+        $card_repository = CardRepository::getInstance();
+        if ($card_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            exit();
+        }
+
+        $card_records = $card_repository->read($board_id);
+//        error_log('Card records: ' . print_r($card_records, true)); // Debug line
+
+        $cards = [];
+        if (count($card_records) > 0) {
+            foreach ($card_records as $card_record) {
+                error_log('Card records: ' . print_r($card_record, true)); // Debug line
+                $cards[] = (new Card($card_record['id'], $card_record['title'], $card_record['index_board']))->toArray();
+            }
+        }
+        return $cards;
     }
 }

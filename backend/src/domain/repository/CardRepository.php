@@ -17,7 +17,7 @@ class CardRepository
     private function __construct()
     {
         $db = Database::getInstance();
-        $this->connection = $db->getConnection();
+        $this->connection = $db?->getConnection();
     }
 
     public static function getInstance(): ?CardRepository
@@ -35,19 +35,23 @@ class CardRepository
                 title VARCHAR(255) NOT NULL,
                 description TEXT,
                 index_board INT,
+                board_id INT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                board_id INT,
+                UNIQUE KEY(board_id, index_board),
                 FOREIGN KEY(board_id) REFERENCES boards(id)
         )";
 
         $this->connection->exec($sql);
     }
 
-    public function read(int $limit, int $offset): array
+    public function read(int $board_id): array
     {
-        $sql = "SELECT * FROM $this->table_name LIMIT $limit OFFSET $offset";
-        return $this->connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM $this->table_name WHERE board_id = :board_id ORDER BY index_board ASC";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':board_id', $board_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function readOne(int $id): ?array
@@ -66,12 +70,14 @@ class CardRepository
         return null;
     }
 
-    public function create(string $title): void
+    public function create(string $title, int $board_id, int $index_board): void
     {
         try {
-            $sql = "INSERT INTO $this->table_name (title) VALUES (:title)";
+            $sql = "INSERT INTO $this->table_name (title, board_id, index_board) VALUES (:title, :board_id, :index_board)";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':board_id', $board_id);
+            $stmt->bindParam(':index_board', $index_board);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();

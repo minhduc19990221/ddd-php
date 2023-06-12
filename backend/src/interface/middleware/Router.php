@@ -186,14 +186,16 @@ class Router
     {
         $title = $requestBody['title'];
         $board_id = $requestBody['board_id'];
+        $index_board = $requestBody['index_board'];
         $cardHandler = new CardService();
-        $cardHandler->create($title, $board_id);
+        $cardHandler->create($title, $board_id, $index_board);
     }
 
     private function getCardRequest(): void
     {
-        $id = $_GET['id'];
+        $board_id = $_GET['board_id'];
         $cardHandler = new CardService();
-        $cardHandler->getOne($id);
+        $result = $cardHandler->getAll($board_id);
+        ResponseSender::sendSuccessResponse(200, $result);
     }
 }

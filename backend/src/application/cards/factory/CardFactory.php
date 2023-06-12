@@ -25,9 +25,9 @@ class CardFactory implements ICardFactory
         return self::$instance;
     }
 
-    public function createOne(string $title): void
+    public function createOne(string $title, int $board_id, int $index_board): void
     {
-        self::$card_repository->create($title);
+        self::$card_repository->create($title, $board_id, $index_board);
     }
 
 }
