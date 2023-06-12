@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Change directory into backend folder
-        run: cd backend
-
       - name: Checkout repository
         uses: actions/checkout@v3
+        
+      - name: Change directory into backend folder
+        run: cd backend
 
       - name: Set up PHP
         uses: php-actions/composer@v6
