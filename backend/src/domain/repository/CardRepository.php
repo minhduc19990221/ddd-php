@@ -34,10 +34,11 @@ class CardRepository
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 title VARCHAR(255) NOT NULL,
                 description TEXT,
+                index_board INT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                card_id INT,
-                FOREIGN KEY(card_id) REFERENCES cards(id)
+                board_id INT,
+                FOREIGN KEY(board_id) REFERENCES boards(id)
         )";
 
         $this->connection->exec($sql);
