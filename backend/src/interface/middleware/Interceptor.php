@@ -65,7 +65,7 @@ class Interceptor
                 $router->cardRouting(REQUEST_METHOD, $request_body);
                 break;
             default:
-                ResponseSender::sendErrorResponse("Resource not found", 404);
+                ResponseSender::sendErrorResponse(404, "Resource not found");
         }
     }
 }
