@@ -91,12 +91,12 @@ class BoardRepository
         }
     }
 
-    public function delete(string $title): void
+    public function delete(int $id): void
     {
         try {
-            $sql = "DELETE FROM $this->table_name WHERE title = :title";
+            $sql = "DELETE FROM $this->table_name WHERE id = :id";
             $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();

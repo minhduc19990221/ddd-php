@@ -61,4 +61,34 @@ class BoardService
         }
         return $boards;
     }
+
+    public function updateOne(string $title, int $id): void
+    {
+        if (!$title || !$id) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            return;
+        }
+        $board_repository = BoardRepository::getInstance();
+        if ($board_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            return;
+        }
+        $board_repository->update($title, $id);
+        ResponseSender::sendSuccessResponse(200, ['message' => 'Board updated successfully']);
+    }
+
+    public function deleteOne(int $id): void
+    {
+        if (!$id) {
+            ResponseSender::sendErrorResponse(400, 'Missing parameters');
+            return;
+        }
+        $board_repository = BoardRepository::getInstance();
+        if ($board_repository === null) {
+            ResponseSender::sendErrorResponse(500, 'Internal server error');
+            return;
+        }
+        $board_repository->delete($id);
+        ResponseSender::sendSuccessResponse(200, ['message' => 'Board deleted successfully']);
+    }
 }
