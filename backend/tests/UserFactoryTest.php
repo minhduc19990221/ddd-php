@@ -11,7 +11,7 @@ class UserFactoryTest extends TestCase
     protected ?UserFactory $user_factory;
     protected ?Helper $helper;
 
-    public function testCreateOne()
+    public function testCreateOne(): void
     {
         $fullname = $this->helper->createMockName();
         $email = $this->helper->createMockEmail();
