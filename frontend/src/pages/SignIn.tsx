@@ -60,7 +60,7 @@ export default function SignIn() {
   };
 
   const handleNavigate = (isLogin: boolean) => {
-    if (isLogin) navigate("/profile", { replace: true });
+    if (isLogin) navigate("/demo", { replace: true });
   };
 
   const handleSubmit = async (event: {

@@ -122,7 +122,7 @@ function Profile({ email, onLogout }: ProfileProps) {
                 <Button
                   onClick={onLogout}
                   sx={{ ml: 2 }}
-                  variant="contained"
+                  variant="outlined"
                   color="error"
                 >
                   Log out

@@ -1,5 +1,7 @@
 import React, { CSSProperties, useState } from "react";
+import Button from "@mui/material/Button";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import Profile from "./Profile";
 
 interface Item {
   id: string;
@@ -53,21 +55,23 @@ const getItemStyle = (
   isDragging: boolean,
   draggableStyle: CSSProperties | undefined
 ) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
   padding: grid * 2,
   margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
+  background: isDragging ? "lightgreen" : "white",
+  borderRadius: "5px",
+  "font-family": "Roboto",
+  color: "dodgerblue",
 
   // styles we need to apply on draggables
   ...draggableStyle,
 });
 const getListStyle = (isDraggingOver: boolean) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
+  padding: grid * 2,
+  margin: "0 10px",
   width: 250,
+  borderRadius: "5px",
+
 });
 
 export default function BoardPage() {
@@ -103,22 +107,30 @@ export default function BoardPage() {
 
   return (
     <div>
-      <button
+      <Profile
+              email={localStorage.getItem("email")}
+              onLogout={() => {
+                localStorage.clear();
+                window.location.href = "/";
+              }}
+            />
+      <Button
         type="button"
         onClick={() => {
           setState([...state, []]);
         }}
       >
         Add new group
-      </button>
-      <button
+      </Button>
+
+      <Button
         type="button"
         onClick={() => {
           setState([...state, getItems(1)]);
         }}
       >
         Add new item
-      </button>
+      </Button>
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
@@ -184,8 +196,10 @@ export default function BoardPage() {
                             }}
                           >
                             {item.content}
-                            <button
+                            <Button
                               type="button"
+                              color="error"
+                              variant="contained"
                               onClick={() => {
                                 const newState = [...state];
                                 newState[ind].splice(index, 1);
@@ -195,7 +209,7 @@ export default function BoardPage() {
                               }}
                             >
                               delete
-                            </button>
+                            </Button>
                           </div>
                         </div>
                       )}
