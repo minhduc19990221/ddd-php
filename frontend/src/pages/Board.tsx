@@ -21,9 +21,15 @@ const getCards = async () => {
 const addCards = async () => {
   const board_id = 3;
   const title = Math.random().toString(36).substring(7);
-  const index_board = Math.floor(Math.random() * 100);
+  const index_board = Math.floor(Math.random() * 1000);
   await axios_instance.post("/cards", { board_id, title, index_board });
 };
+
+const handleDelete = async (id: number) => {
+  await axios_instance.delete("/cards", {
+    params: { id },
+  });
+}
 
 const reorder = (
   list: Iterable<unknown> | ArrayLike<unknown>,
@@ -58,12 +64,6 @@ const move = (
 
   return result;
 };
-
-const handleDelete = async (id: number) => {
-  await axios_instance.delete("/cards", {
-    params: { id },
-  });
-}
 
 export default function BoardPage() {
   const [state, setState] = useState([]);
