@@ -1,20 +1,17 @@
-import { Component } from 'react';
 import TextField from '@mui/material/TextField';
 
-class FullNameField extends Component {
-  render() {
+const FullNameField = () => {
     return (
-      <TextField
-        autoComplete="name"
-        name="fullname"
-        required
-        fullWidth
-        id="fullname"
-        label="Full Name"
-        autoFocus
-      />
+        <TextField
+            autoComplete="name"
+            name="fullname"
+            required
+            fullWidth
+            id="fullname"
+            label="Full Name"
+            autoFocus
+        />
     );
-  }
-}
+};
 
 export default FullNameField;

@@ -1,49 +1,36 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import Zod from 'zod';
 
-interface State {
-    email: string;
-    error: string;
-}
+const schema = Zod.object({
+    email: Zod.string().email(),
+});
 
-class EmailField extends Component<{}, State> {
-    constructor(props: {} | Readonly<{}>) {
-        super(props);
-        this.state = {
-            email: '',
-            error: '',
-        };
-    }
+const EmailField = () => {
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
 
-    handleChange = (event: {
-        [x: string]: any; preventDefault: () => void;
-    }) => {
-        event.preventDefault();
-        this.setState({ email: event.target.value });
-        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email);
-        if (isValidEmail) {
-            this.setState({ error: '' });
-        } else {
-            this.setState({ error: 'Please enter a valid email address' });
-        }
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const emailValue = event.target.value;
+        setEmail(emailValue);
+        const isValidEmail = schema.parse({ email: emailValue });
+        setError(isValidEmail ? '' : 'Please enter a valid email address');
     };
 
-    render() {
-        return (
-                <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                    error={Boolean(this.state.error)}
-                    helperText={this.state.error}
-                />
-        );
-    }
-}
+    return (
+        <TextField
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={handleChange}
+            error={Boolean(error)}
+            helperText={error}
+        />
+    );
+};
 
 export default EmailField;
