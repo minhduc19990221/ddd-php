@@ -1,84 +1,96 @@
-import { SetStateAction, useEffect, useState } from 'react';
-import { Box, Grid, Typography, TextField, Button } from '@mui/material';
-import z from 'zod';
-import axios_instance from '../utils/Interceptor';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import { Box, Grid, Typography, TextField, Button } from "@mui/material";
+import Zod from "zod";
+import axios_instance from "../utils/Interceptor";
+import AlertModal from "../components/BasicModal";
 
-function Profile() {
-  const [name, setName] = useState('');
+interface User {
+  fullname: string;
+}
+
+interface ProfileProps {
+  email: string;
+  onLogout: () => void;
+}
+
+function Profile({ email, onLogout }: ProfileProps) {
+  const [name, setName] = useState("");
   const [editing, setEditing] = useState(false);
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    get_user_name();
-  }, []);
+    getUser();
+  }, [name]);
 
-  const schema = z.object({
-    name: z.string().min(1),
+  const schema = Zod.object({
+    name: Zod.string().min(1),
   });
-
 
   const handleEdit = () => {
     setEditing(true);
     setNewName(name);
   };
 
-  const handleCancel = () => {
-    setEditing(false);
-    setNewName('');
+  const handleOpen = (msg: string) => {
+    setMessage(msg);
+    setOpen(true);
   };
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleClose = () => setOpen(false);
+
+
+  const handleCancel = () => {
+    setEditing(false);
+    setNewName("");
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // using zod to validate newName
     try {
       schema.parse({ name: newName });
-    } catch (error: any) {
-      alert("Invalid name");
+    } catch (error) {
       return;
     }
-    await axios_instance.put('users', { fullname: newName, email: localStorage.getItem('email') })
-      .then(response => {
-        console.log(response);
-        setName(newName);
-        setEditing(false);
-        setNewName('');
-      })
-      .catch(error => {
-        console.log(error);
-      }
-      );
+
+    try {
+      const email_params = localStorage.getItem("email");
+
+      const response = await axios_instance.put<User>("users", {
+        fullname: newName,
+        email: email_params,
+      });
+      setName(response.data.fullname);
+      setEditing(false);
+      setNewName("");
+      handleOpen("Name updated successfully!");
+    } catch (error) {
+      console.log(error);
+      handleOpen(error.response.data.message);
+    }
   };
 
-  const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(event.target.value);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    window.location.href = '/';
-  };
-
-  const get_user_name = async () => {
+  const getUser = async () => {
     try {
-      await axios_instance.get('users', { params: { email: localStorage.getItem('email') } })
-        .then(response => {
-          console.log("response: ", response)
-          setName(response.data.user.fullname);
-        })
-        .catch(error => {
-          console.log(error);
-          alert("Error getting user name");
-        });
-    } catch (error: any) {
+      const email_params = localStorage.getItem("email");
+      const response = await axios_instance.get<{ user: User }>("users", {
+        params: { email: email_params },
+      });
+      setName(response.data.user.fullname);
+    } catch (error) {
       if (error.response && error.response.status === 401) {
-        handleLogout();
-        alert('Error getting user name');
+        onLogout();
+        handleOpen(error.response.data.message);
       }
     }
-  }
+  };
 
   return (
     <Box sx={{ p: 4 }}>
@@ -107,11 +119,17 @@ function Profile() {
                 <Button onClick={handleEdit} sx={{ ml: 2 }} variant="outlined">
                   Edit
                 </Button>
-                <Button onClick={handleLogout} sx={{ ml: 2 }} variant="contained" color="error">
+                <Button
+                  onClick={onLogout}
+                  sx={{ ml: 2 }}
+                  variant="contained"
+                  color="error"
+                >
                   Log out
                 </Button>
               </>
             )}
+            <AlertModal open={open} onClose={handleClose} message={message} />
           </Typography>
         </Grid>
       </Grid>
