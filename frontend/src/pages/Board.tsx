@@ -1,19 +1,26 @@
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Profile from "./Profile";
+import axios_instance from "../utils/Interceptor";
 
 interface Item {
   id: string;
-  content: string;
+  title: string;
 }
 
-// fake data generator
-const getItems = (count: number, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`,
-  }));
+const getCards = async () => {
+  const response = await axios_instance.get("/cards", {params: {board_id: 3}});
+  console.log("response data: ", response.data);
+  return response.data;
+}
+
+const addCards = async () => {
+  const board_id = 3;
+  const title = Math.random().toString(36).substring(7);
+  const index_board = Math.floor(Math.random() * 10);
+  await axios_instance.post("/cards", {board_id, title, index_board});
+}
 
 const reorder = (
   list: Iterable<unknown> | ArrayLike<unknown>,
@@ -59,7 +66,7 @@ const getItemStyle = (
   margin: `0 0 ${grid}px 0`,
   background: isDragging ? "lightgreen" : "white",
   borderRadius: "5px",
-  "font-family": "Roboto",
+  fontFamily: "Roboto",
   color: "dodgerblue",
 
   // styles we need to apply on draggables
@@ -75,7 +82,14 @@ const getListStyle = (isDraggingOver: boolean) => ({
 });
 
 export default function BoardPage() {
-  const [state, setState] = useState([getItems(10), getItems(5, 10)]);
+  const [state, setState] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const cards = await getCards();
+      setState([cards]);
+    })();
+  }, []);
 
   function onDragEnd(result: {
     source: { droppableId: string; index: number };
@@ -125,8 +139,10 @@ export default function BoardPage() {
 
       <Button
         type="button"
-        onClick={() => {
-          setState([...state, getItems(1)]);
+        onClick={async () => {
+          await addCards();
+          const cards = await getCards();
+          setState([cards]);
         }}
       >
         Add new item
@@ -161,8 +177,8 @@ export default function BoardPage() {
                 >
                   {el.map((item, index) => (
                     <Draggable
-                      key={item.id}
-                      draggableId={item.id}
+                      key={item.id.toString()}
+                      draggableId={item.id.toString()}
                       index={index}
                     >
                       {(
@@ -195,7 +211,7 @@ export default function BoardPage() {
                               justifyContent: "space-around",
                             }}
                           >
-                            {item.content}
+                            {item.title}
                             <Button
                               type="button"
                               color="error"
