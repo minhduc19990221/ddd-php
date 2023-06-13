@@ -62,7 +62,7 @@ class CardService
         if (count($card_records) > 0) {
             foreach ($card_records as $card_record) {
                 error_log('Card records: ' . print_r($card_record, true)); // Debug line
-                $cards[] = (new Card($card_record['id'], $card_record['title'], $card_record['index_board']))->toArray();
+                $cards[] = (new Card($card_record['id'], $card_record['title'], $card_record['index_board'], $card_record['board_id']))->toArray();
             }
         }
         return $cards;
