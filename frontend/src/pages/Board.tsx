@@ -138,8 +138,8 @@ export default function BoardPage() {
               key={ind}
               listId={ind}
               items={el}
-              onDelete={(listId, index) => {
-                deleteCard(state[listId][index].id);
+              onDelete={async (listId, index) => {
+                await deleteCard(state[listId][index].id);
                 const newState = [...state];
                 newState[listId].splice(index, 1);
                 setState(newState.filter((group) => group.length));
