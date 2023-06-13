@@ -122,7 +122,6 @@ class Router
                 $this->updateBoardRequest($requestBody);
                 break;
             case 'DELETE':
-                $this->isRequestBodyEmpty($requestBody);
                 $this->deleteBoardRequest($requestBody);
                 break;
             default:
@@ -182,7 +181,6 @@ class Router
                 $this->updateCardRequest($requestBody);
                 break;
             case 'DELETE':
-                $this->isRequestBodyEmpty($requestBody);
                 $this->deleteCardRequest($requestBody);
                 break;
             default:
@@ -218,7 +216,7 @@ class Router
 
     private function deleteCardRequest(array $requestBody): void
     {
-        $id = $requestBody['id'];
+        $id = $_GET['id'];
         $cardHandler = new CardService();
         $cardHandler->deleteOne($id);
     }
