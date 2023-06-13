@@ -4,6 +4,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import Profile from "./Profile";
 import axios_instance from "../utils/Interceptor";
 import DraggableList from "../components/DraggableList";
+import { TextField } from "@mui/material";
 
 interface Item {
   id: string;
@@ -29,6 +30,11 @@ const deleteCard = async (id: number) => {
   await axios_instance.delete("/cards", {
     params: { id },
   });
+}
+
+const createBoard = async (title: string) => {
+  // Call to your API to create a new list
+  await axios_instance.post("/boards", { title, email: localStorage.getItem("email") });
 }
 
 const reorder = (
@@ -113,13 +119,13 @@ export default function BoardPage() {
         }}
       />
       <Button
-        type="button"
+          type="button"
         onClick={() => {
-          setState([...state, []]);
-        }}
-      >
+            setState([...state, []]);
+          }}
+        >
         Add new group
-      </Button>
+        </Button>
 
       <Button
         type="button"
