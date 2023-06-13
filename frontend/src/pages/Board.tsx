@@ -18,7 +18,7 @@ const getCards = async () => {
   return response.data;
 };
 
-const addCards = async () => {
+const addCard = async () => {
   const board_id = 3;
   const title = Math.random().toString(36).substring(7);
   const index_board = Math.floor(Math.random() * 1000);
@@ -124,7 +124,7 @@ export default function BoardPage() {
       <Button
         type="button"
         onClick={async () => {
-          await addCards();
+          await addCard();
           const cards = await getCards();
           setState([cards]);
         }}
