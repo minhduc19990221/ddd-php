@@ -21,7 +21,7 @@ const getCards = async () => {
 const addCards = async () => {
   const board_id = 3;
   const title = Math.random().toString(36).substring(7);
-  const index_board = Math.floor(Math.random() * 10);
+  const index_board = Math.floor(Math.random() * 100);
   await axios_instance.post("/cards", { board_id, title, index_board });
 };
 
