@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Zod from 'zod';
 
-const schema = Zod.object({
-    email: Zod.string().email(),
-});
 
 const EmailField = () => {
     const [email, setEmail] = useState('');
@@ -12,8 +8,9 @@ const EmailField = () => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const emailValue = event.target.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         setEmail(emailValue);
-        const isValidEmail = schema.parse({ email: emailValue });
+        const isValidEmail = emailRegex.test(emailValue);
         setError(isValidEmail ? '' : 'Please enter a valid email address');
     };
 
