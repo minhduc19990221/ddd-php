@@ -12,8 +12,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailField from '../components/Email';
 import PasswordField from '../components/Password';
-import z from 'zod';
+import z, { set } from 'zod';
 import axios_instance from '../utils/Interceptor';
+import AlertModal from '../components/BasicModal';
 
 
 function Copyright(props: any) {
@@ -34,7 +35,24 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleOpen = (msg: string) => {
+    setMessage(msg);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    handleNavigate(isLogin);
+  };
+
+  const handleNavigate = (isLogin: boolean) => {
+    if (isLogin) navigate('/profile', { replace: true });
+  };
 
   const handleSubmit = async (event: {
     currentTarget: HTMLFormElement | undefined; preventDefault: () => void;
@@ -50,8 +68,9 @@ export default function SignIn() {
     });
     try {
       schema.parse({ email, password });
-    } catch (error: any) {
-      alert("Invalid email, fullname, or password");
+    } catch (error) {
+      handleOpen("Invalid input!");
+      setIsLogin(false);
       return;
     }
     try {
@@ -59,15 +78,21 @@ export default function SignIn() {
         .then(response => {
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('email', email);
-          alert(response.data.message)
-        })
-        .then(() => {
-          navigate('/profile', { replace: true });
+          handleOpen('Login successfully!');
+          setIsLogin(true);
         })
         .catch(error => {
           console.log(error);
+          setError(error.response.data.message);
+          setIsLogin(false);
+          handleOpen(error);
         });
-    } catch (error: any) {
+        // if(open === false) {
+        //   navigate('/profile', { replace: true });
+        // }
+    } catch (error) {
+      console.log(error);
+      setIsLogin(false);
       setError(error.response.data.message);
     }
   };
@@ -109,6 +134,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+            <AlertModal open={open} onClose={handleClose} message={message} />
             <Grid container justifyContent="center">
               <Grid item>
                 <Link href="/signup" variant="body2">
