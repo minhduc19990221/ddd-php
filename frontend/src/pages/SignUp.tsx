@@ -1,31 +1,41 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import EmailField from '../components/Email';
-import FullNameField from '../components/FullName';
-import PasswordField from '../components/Password';
-import z from 'zod';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import axios_instance from '../utils/Interceptor';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import EmailField from "../components/Email";
+import FullNameField from "../components/FullName";
+import PasswordField from "../components/Password";
+import Zod from "zod";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios_instance from "../utils/Interceptor";
+import AlertModal from "../components/BasicModal";
 
-function Copyright(props: any) {
+function Copyright(props: {
+  sx: {
+    mt: number;
+  };
+}) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -35,39 +45,58 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [allowNavigate, setAllowNavigate] = useState(false);
+
+  const handleOpen = (msg: string) => {
+    setMessage(msg);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    handleNavigate(allowNavigate);
+  };
+
+  const handleNavigate = (allowNavigate: boolean) => {
+    if (allowNavigate) navigate("/", { replace: true });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user_input = new FormData(event.currentTarget);
-    const email = user_input.get('email') as string;
-    const fullname = user_input.get('fullname') as string;
-    const password = user_input.get('password') as string;
+    const email = user_input.get("email") as string;
+    const fullname = user_input.get("fullname") as string;
+    const password = user_input.get("password") as string;
     // validate email, fullname, and password
-    const schema = z.object({
-      email: z.string().email(),
-      fullname: z.string(),
-      password: z.string(),
+    const schema = Zod.object({
+      email: Zod.string().email(),
+      fullname: Zod.string(),
+      password: Zod.string(),
     });
     try {
       schema.parse({ email, password, fullname });
-    } catch (error: any) {
-      alert("Invalid email, fullname, or password");
+    } catch (error) {
+      handleOpen("Invalid email, fullname, or password");
+      setAllowNavigate(false);
       return;
     }
     try {
-      await axios_instance.post('register', { email, fullname, password })
-        .then(response => {
+      await axios_instance
+        .post("register", { email, fullname, password })
+        .then((response) => {
           console.log(response);
-          alert("Register successfully");
+          handleOpen("Register successfully");
+          setAllowNavigate(true);
         })
-        .then(() => {
-          navigate('/');
-        })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
+          handleOpen("Register failed");
+          setAllowNavigate(false);
         });
-    } catch (error: any) {
+    } catch (error) {
       setError(error.response.data.message);
       console.log(error);
     }
@@ -80,29 +109,32 @@ export default function SignUp() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FullNameField />
               </Grid>
               <Grid item xs={12}>
-                <EmailField
-                />
+                <EmailField />
               </Grid>
               <Grid item xs={12}>
-                <PasswordField
-                />
+                <PasswordField />
               </Grid>
             </Grid>
             <Button
@@ -113,6 +145,7 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
+            <AlertModal open={open} onClose={handleClose} message={message} />
             <Grid container justifyContent="center">
               <Grid item>
                 <Link href="/" variant="body2">
