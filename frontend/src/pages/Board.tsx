@@ -25,7 +25,7 @@ const addCards = async () => {
   await axios_instance.post("/cards", { board_id, title, index_board });
 };
 
-const handleDelete = async (id: number) => {
+const deleteCard = async (id: number) => {
   await axios_instance.delete("/cards", {
     params: { id },
   });
@@ -139,7 +139,7 @@ export default function BoardPage() {
               listId={ind}
               items={el}
               onDelete={(listId, index) => {
-                handleDelete(state[listId][index].id);
+                deleteCard(state[listId][index].id);
                 const newState = [...state];
                 newState[listId].splice(index, 1);
                 setState(newState.filter((group) => group.length));
