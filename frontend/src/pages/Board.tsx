@@ -1,8 +1,9 @@
-import React, { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import Profile from "./Profile";
 import axios_instance from "../utils/Interceptor";
+import DraggableList from "../components/DraggableList";
 
 interface Item {
   id: string;
@@ -10,17 +11,19 @@ interface Item {
 }
 
 const getCards = async () => {
-  const response = await axios_instance.get("/cards", {params: {board_id: 3}});
+  const response = await axios_instance.get("/cards", {
+    params: { board_id: 3 },
+  });
   console.log("response data: ", response.data);
   return response.data;
-}
+};
 
 const addCards = async () => {
   const board_id = 3;
   const title = Math.random().toString(36).substring(7);
   const index_board = Math.floor(Math.random() * 10);
-  await axios_instance.post("/cards", {board_id, title, index_board});
-}
+  await axios_instance.post("/cards", { board_id, title, index_board });
+};
 
 const reorder = (
   list: Iterable<unknown> | ArrayLike<unknown>,
@@ -56,30 +59,11 @@ const move = (
   return result;
 };
 
-const grid = 8;
-
-const getItemStyle = (
-  isDragging: boolean,
-  draggableStyle: CSSProperties | undefined
-) => ({
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-  background: isDragging ? "lightgreen" : "white",
-  borderRadius: "5px",
-  fontFamily: "Roboto",
-  color: "dodgerblue",
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
-const getListStyle = (isDraggingOver: boolean) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid * 2,
-  margin: "0 10px",
-  width: 250,
-  borderRadius: "5px",
-
-});
+const handleDelete = async (id: number) => {
+  await axios_instance.delete("/cards", {
+    params: { id },
+  });
+}
 
 export default function BoardPage() {
   const [state, setState] = useState([]);
@@ -122,12 +106,12 @@ export default function BoardPage() {
   return (
     <div>
       <Profile
-              email={localStorage.getItem("email")}
-              onLogout={() => {
-                localStorage.clear();
-                window.location.href = "/";
-              }}
-            />
+        email={localStorage.getItem("email")}
+        onLogout={() => {
+          localStorage.clear();
+          window.location.href = "/";
+        }}
+      />
       <Button
         type="button"
         onClick={() => {
@@ -150,91 +134,17 @@ export default function BoardPage() {
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
-            <Droppable key={ind} droppableId={`${ind}`}>
-              {(
-                provided: {
-                  innerRef: React.LegacyRef<HTMLDivElement>;
-                  droppableProps: JSX.IntrinsicAttributes &
-                    React.ClassAttributes<HTMLDivElement> &
-                    React.HTMLAttributes<HTMLDivElement>;
-                  placeholder:
-                    | string
-                    | number
-                    | boolean
-                    | React.ReactElement<
-                        any,
-                        string | React.JSXElementConstructor<any>
-                      >
-                    | React.ReactFragment
-                    | React.ReactPortal;
-                },
-                snapshot: { isDraggingOver: boolean }
-              ) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                  {...provided.droppableProps}
-                >
-                  {el.map((item, index) => (
-                    <Draggable
-                      key={item.id.toString()}
-                      draggableId={item.id.toString()}
-                      index={index}
-                    >
-                      {(
-                        provided: {
-                          innerRef: React.LegacyRef<HTMLDivElement>;
-                          draggableProps: JSX.IntrinsicAttributes &
-                            React.ClassAttributes<HTMLDivElement> &
-                            React.HTMLAttributes<HTMLDivElement>;
-                          dragHandleProps: JSX.IntrinsicAttributes &
-                            React.ClassAttributes<HTMLDivElement> &
-                            React.HTMLAttributes<HTMLDivElement>;
-                        },
-                        snapshot: { isDragging: boolean }
-                      ) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            ),
-                            userSelect: "none",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                            }}
-                          >
-                            {item.title}
-                            <Button
-                              type="button"
-                              color="error"
-                              variant="contained"
-                              onClick={() => {
-                                const newState = [...state];
-                                newState[ind].splice(index, 1);
-                                setState(
-                                  newState.filter((group) => group.length)
-                                );
-                              }}
-                            >
-                              delete
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+            <DraggableList
+              key={ind}
+              listId={ind}
+              items={el}
+              onDelete={(listId, index) => {
+                handleDelete(state[listId][index].id);
+                const newState = [...state];
+                newState[listId].splice(index, 1);
+                setState(newState.filter((group) => group.length));
+              }}
+            />
           ))}
         </DragDropContext>
       </div>
