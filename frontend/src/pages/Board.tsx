@@ -1,16 +1,23 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
+import React, { CSSProperties, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
+interface Item {
+  id: string;
+  content: string;
+}
 
 // fake data generator
 const getItems = (count: number, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
+  Array.from({ length: count }, (v, k) => k).map((k) => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`
+    content: `item ${k + offset}`,
   }));
 
-const reorder = (list: Iterable<unknown> | ArrayLike<unknown>, startIndex: number, endIndex: number) => {
+const reorder = (
+  list: Iterable<unknown> | ArrayLike<unknown>,
+  startIndex: number,
+  endIndex: number
+) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -21,7 +28,12 @@ const reorder = (list: Iterable<unknown> | ArrayLike<unknown>, startIndex: numbe
 /**
  * Moves an item from one list to another list.
  */
-const move = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Iterable<unknown> | ArrayLike<unknown>, droppableSource: { index: number; droppableId: string | number; }, droppableDestination: { index: number; droppableId: string | number; }) => {
+const move = (
+  source: Iterable<unknown> | ArrayLike<unknown>,
+  destination: Iterable<unknown> | ArrayLike<unknown>,
+  droppableSource: { index: number; droppableId: string | number },
+  droppableDestination: { index: number; droppableId: string | number }
+) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -34,9 +46,13 @@ const move = (source: Iterable<unknown> | ArrayLike<unknown>, destination: Itera
 
   return result;
 };
+
 const grid = 8;
 
-const getItemStyle = (isDragging: any, draggableStyle: any) => ({
+const getItemStyle = (
+  isDragging: boolean,
+  draggableStyle: CSSProperties | undefined
+) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: grid * 2,
@@ -46,39 +62,42 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
   background: isDragging ? "lightgreen" : "grey",
 
   // styles we need to apply on draggables
-  ...draggableStyle
+  ...draggableStyle,
 });
-const getListStyle = (isDraggingOver: any) => ({
+const getListStyle = (isDraggingOver: boolean) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: grid,
-  width: 250
+  width: 250,
 });
 
 export default function BoardPage() {
   const [state, setState] = useState([getItems(10), getItems(5, 10)]);
 
-  function onDragEnd(result: { source: any; destination: any; }) {
+  function onDragEnd(result: {
+    source: { droppableId: string; index: number };
+    destination: { droppableId: string; index: number };
+  }) {
     const { source, destination } = result;
 
     // dropped outside the list
     if (!destination) {
       return;
     }
-    const sInd = +source.droppableId;
-    const dInd = +destination.droppableId;
+    const sInd: number = +source.droppableId;
+    const dInd: number = +destination.droppableId;
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
-      const newState: any = [...state];
+      const newState: Partial<Item>[][] = [...state];
       newState[sInd] = items;
-      setState(newState);
+      setState(newState as unknown as Item[][]);
     } else {
       const result = move(state[sInd], state[dInd], source, destination);
       const newState = [...state];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
-      setState(newState.filter(group => group.length));
+      setState(newState.filter((group) => group.length));
     }
   }
 
@@ -104,7 +123,25 @@ export default function BoardPage() {
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
-              {(provided: { innerRef: React.LegacyRef<HTMLDivElement>; droppableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal; }, snapshot: { isDraggingOver: any; }) => (
+              {(
+                provided: {
+                  innerRef: React.LegacyRef<HTMLDivElement>;
+                  droppableProps: JSX.IntrinsicAttributes &
+                    React.ClassAttributes<HTMLDivElement> &
+                    React.HTMLAttributes<HTMLDivElement>;
+                  placeholder:
+                    | string
+                    | number
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | React.ReactFragment
+                    | React.ReactPortal;
+                },
+                snapshot: { isDraggingOver: boolean }
+              ) => (
                 <div
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
@@ -116,20 +153,34 @@ export default function BoardPage() {
                       draggableId={item.id}
                       index={index}
                     >
-                      {(provided: { innerRef: React.LegacyRef<HTMLDivElement>; draggableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; dragHandleProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; }, snapshot: { isDragging: any; }) => (
+                      {(
+                        provided: {
+                          innerRef: React.LegacyRef<HTMLDivElement>;
+                          draggableProps: JSX.IntrinsicAttributes &
+                            React.ClassAttributes<HTMLDivElement> &
+                            React.HTMLAttributes<HTMLDivElement>;
+                          dragHandleProps: JSX.IntrinsicAttributes &
+                            React.ClassAttributes<HTMLDivElement> &
+                            React.HTMLAttributes<HTMLDivElement>;
+                        },
+                        snapshot: { isDragging: boolean }
+                      ) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
+                          style={{
+                            ...getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            ),
+                            userSelect: "none",
+                          }}
                         >
                           <div
                             style={{
                               display: "flex",
-                              justifyContent: "space-around"
+                              justifyContent: "space-around",
                             }}
                           >
                             {item.content}
@@ -139,7 +190,7 @@ export default function BoardPage() {
                                 const newState = [...state];
                                 newState[ind].splice(index, 1);
                                 setState(
-                                  newState.filter(group => group.length)
+                                  newState.filter((group) => group.length)
                                 );
                               }}
                             >
