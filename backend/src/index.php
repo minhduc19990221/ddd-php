@@ -1,5 +1,19 @@
 <?php
+
+use Backend\interface\middleware\Interceptor;
+use Infrastructure\RateLimiter;
+
 require_once __DIR__ . '/../vendor/autoload.php';
+
+session_start();
+
+if (empty($_SESSION['csrf_token'])) {
+    try {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    } catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
 
 $dotenvPath = __DIR__ . '/.env';
 if (file_exists($dotenvPath)) {
@@ -11,5 +25,6 @@ if (file_exists($dotenvPath)) {
     echo 'Error: .env file not found';
 }
 
-require __DIR__ . '/interface/middleware/Interceptor.php';
-
+$rate_limiter = new RateLimiter($_ENV['REQUEST_LIMIT'], $_ENV['TIME_PERIOD']);
+$interceptor = new Interceptor($rate_limiter);
+$interceptor->handleRequest();

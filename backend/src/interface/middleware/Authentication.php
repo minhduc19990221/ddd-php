@@ -37,7 +37,7 @@ class Authentication
             "data" => $account  //Data related to the signer user
         );
         $jwt = JWT::encode($payload, $this->key, "HS256");  //generate the token
-        ResponseSender::sendSuccessResponse(200, ["message" => "Login successfully", "token" => $jwt]);
+        ResponseSender::sendSuccessResponse(200, ["message" => "Login successfully", "token" => $jwt, "csrf_token" => $_SESSION['csrf_token']]);
     }
 
     public function validateToken(): bool
@@ -55,5 +55,18 @@ class Authentication
             error_log($e->getMessage());
             return false;
         }
+    }
+
+    public function validateCsrfToken(): bool
+    {
+        $headers = apache_request_headers();
+        $csrf_token = $headers['X-CSRF-TOKEN'] ?? $headers['x-csrf-token'] ?? null;
+        if (!$csrf_token) {
+            die("Missing CSRF token");
+        }
+        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+            die("Invalid CSRF token");
+        }
+        return $csrf_token === $_SESSION['csrf_token'];
     }
 }

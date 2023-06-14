@@ -69,8 +69,3 @@ class Interceptor
         }
     }
 }
-
-// Usage:
-$rate_limiter = new RateLimiter($_ENV['REQUEST_LIMIT'], $_ENV['TIME_PERIOD']);
-$interceptor = new Interceptor($rate_limiter);
-$interceptor->handleRequest();

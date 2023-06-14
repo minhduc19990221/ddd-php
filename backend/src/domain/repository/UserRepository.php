@@ -20,7 +20,7 @@ class UserRepository
     private function __construct()
     {
         $db = Database::getInstance();
-        $this->connection = $db->getConnection();
+        $this->connection = $db?->getConnection();
     }
 
     public static function getInstance(): ?UserRepository

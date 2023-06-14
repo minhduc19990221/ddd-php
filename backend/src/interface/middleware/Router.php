@@ -66,6 +66,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'PUT':
+                $this->validateCsrfToken();
                 $this->isRequestBodyEmpty($requestBody);
                 $this->updateUserRequest($requestBody);
                 break;
@@ -81,6 +82,11 @@ class Router
     {
 
         return $this->auth->validateToken();
+    }
+
+    private function validateCsrfToken(): void
+    {
+        $this->auth->validateCsrfToken();
     }
 
     private function updateUserRequest(array $requestBody): void
@@ -111,6 +117,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'POST':
+                $this->validateCsrfToken();
                 $this->isRequestBodyEmpty($requestBody);
                 $this->createBoardRequest($requestBody);
                 break;
@@ -118,10 +125,12 @@ class Router
                 $this->getBoardRequest();
                 break;
             case 'PUT':
+                $this->validateCsrfToken();
                 $this->isRequestBodyEmpty($requestBody);
                 $this->updateBoardRequest($requestBody);
                 break;
             case 'DELETE':
+                $this->validateCsrfToken();
                 $this->deleteBoardRequest($requestBody);
                 break;
             default:
@@ -170,6 +179,7 @@ class Router
         }
         switch ($requestMethod) {
             case 'POST':
+                $this->validateCsrfToken();
                 $this->isRequestBodyEmpty($requestBody);
                 $this->createCardRequest($requestBody);
                 break;
@@ -177,11 +187,13 @@ class Router
                 $this->getCardRequest();
                 break;
             case 'PUT':
+                $this->validateCsrfToken();
                 $this->isRequestBodyEmpty($requestBody);
                 $this->updateCardRequest($requestBody);
                 break;
             case 'DELETE':
-                $this->deleteCardRequest($requestBody);
+                $this->validateCsrfToken();
+                $this->deleteCardRequest();
                 break;
             default:
                 ResponseSender::sendErrorResponse(405, "Method not allowed");
@@ -214,7 +226,7 @@ class Router
         $cardHandler->updateOne($id, $title, $index_board);
     }
 
-    private function deleteCardRequest(array $requestBody): void
+    private function deleteCardRequest(): void
     {
         $id = $_GET['id'];
         $cardHandler = new CardService();

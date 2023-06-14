@@ -18,11 +18,6 @@ class Board
         return $this->id;
     }
 
-    public function getTitle(): string
-    {
-        return htmlspecialchars($this->title);
-    }
-
     public function toArray(): array
     {
         return [

@@ -18,7 +18,7 @@ class UserService
             return;
         }
         $user = UserFactory::getInstance();
-        $user->createOne($fullname, $email, $password);
+        $user?->createOne($fullname, $email, $password);
         ResponseSender::sendSuccessResponse(201, ['message' => 'User created successfully']);
     }
 
@@ -28,7 +28,7 @@ class UserService
             ResponseSender::sendErrorResponse(400, "Missing parameters");
             return false;
         }
-        return UserRepository::getInstance()->userExists($email, $password);
+        return UserRepository::getInstance()?->userExists($email, $password);
     }
 
     public function update(string $fullname, string $email): void
@@ -39,7 +39,7 @@ class UserService
         }
         $this->isUserExisted($email);
         $user = UserRepository::getInstance();
-        $user->updateOne($fullname, $email);
+        $user?->updateOne($fullname, $email);
         ResponseSender::sendSuccessResponse(200, ['message' => 'User updated successfully']);
     }
 
@@ -50,7 +50,7 @@ class UserService
             return false;
         }
         $user_repository = UserRepository::getInstance();
-        $user = $user_repository->readOne($email);
+        $user = $user_repository?->readOne($email);
         if (empty($user)) {
             ResponseSender::sendErrorResponse(404, "User not found");
             return false;
@@ -65,7 +65,7 @@ class UserService
             return null;
         }
         $user_repository = UserRepository::getInstance();
-        $user_record = $user_repository->readOne($email);
+        $user_record = $user_repository?->readOne($email);
         $user = new User($user_record['fullname'], $user_record['email'], $user_record['password']);
         $result = $user->toArray();
         ResponseSender::sendSuccessResponse(200, ['message' => 'User retrieved successfully', 'user' => $result]);

@@ -24,23 +24,6 @@ class BoardService
         ResponseSender::sendSuccessResponse(201, ['message' => 'Board created successfully']);
     }
 
-    public function getOne(int $id): array
-    {
-        if (!$id) {
-            ResponseSender::sendErrorResponse(400, 'Missing parameters');
-            exit();
-        }
-
-        $board_repository = BoardRepository::getInstance();
-        if ($board_repository === null) {
-            ResponseSender::sendErrorResponse(500, 'Internal server error');
-            exit();
-        }
-
-        $board_record = $board_repository->readOne($id);
-        return (new Board($board_record['id'], $board_record['title']))->toArray();
-    }
-
     public function getAll(string $email): array
     {
         if (!$email) {
