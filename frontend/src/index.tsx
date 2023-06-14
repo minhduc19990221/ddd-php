@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import reportWebVitals from "./reportWebVitals";
 import SignUp from "./pages/SignUp";
-import Profile from "./pages/Profile";
 import BoardPage from "./pages/Board";
 
 const root = document.getElementById("root");
