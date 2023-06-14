@@ -15,7 +15,6 @@ if (root) {
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/board" element={<BoardPage />} />
-        {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </BrowserRouter>
   );
