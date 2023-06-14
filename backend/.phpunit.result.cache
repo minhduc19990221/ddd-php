@@ -1,0 +1,1 @@
+{"version":1,"defects":{"UserRepositoryTest::testRead":7},"times":{"UserRepositoryTest::testCreateOne":0.003,"UserRepositoryTest::testUserExists":0.001,"UserRepositoryTest::testRead":0.006,"UserRepositoryTest::testReadOne":0.001,"UserRepositoryTest::testUpdateOne":0.001,"UserRepositoryTest::testDeleteOne":0.001}}

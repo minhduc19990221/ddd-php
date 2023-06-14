@@ -1,17 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SignIn from "./pages/SignIn";
+import reportWebVitals from "./reportWebVitals";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import BoardPage from "./pages/Board";
 
-
-const root = document.getElementById('root');
+const root = document.getElementById("root");
 if (root) {
   const rootElement = ReactDOM.createRoot(root);
   rootElement.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route
+          path="/profile"
+          element={
+            <Profile
+              email={localStorage.getItem("email")}
+              onLogout={() => {
+                localStorage.clear();
+                window.location.href = "/";
+              }}
+            />
+          }
+        />
+        <Route path="/demo" element={<BoardPage />} />
+        {/* <Route path="/contact" element={<Contact />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,26 @@
+name: PHPUnit Tests
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  run-tests:
+    runs-on: [ self-hosted, internal-network ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Change directory into backend folder
+        run: cd backend
+
+      - name: Set up PHP
+        uses: php-actions/composer@v6
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit --bootstrap vendor/autoload.php tests
+      
+      - name: Delete dependencies
+        run: rm -rf vendor

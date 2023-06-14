@@ -1,10 +1,27 @@
 {
-    "name": "d002834/backend",
-    "description": "Backend Environment for practice project",
-    "autoload": {
-        "psr-4": {
-            "D002834\\Backend\\": "src/"
-        }
-    },
-    "require": {}
+  "name": "d002834/backend",
+  "description": "Backend Environment for practice project",
+  "autoload": {
+    "psr-4": {
+      "Backend\\": "src/",
+      "Utils\\": "src/utils/",
+      "Interface\\": "src/interface/",
+      "Domain\\": "src/domain/",
+      "Infrastructure\\": "src/infrastructure/",
+      "Application\\": "src/application/"
+    }
+  },
+  "require": {
+    "ext-pdo": "*",
+    "ext-json": "*",
+    "firebase/php-jwt": "^6.5",
+    "ext-mysql_xdevapi": "*",
+    "vlucas/phpdotenv": "^5.5",
+    "respect/validation": "^2.2",
+    "predis/predis": "^2.1"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^10.2"
+  }
 }
