@@ -5,7 +5,7 @@ const axios_instance: AxiosInstance = axios.create({
   timeout: 1000,
 });
 
-// Setting default headers to avoid CORS, and XSS attacks
+// Setting default headers to avoid CORS, CSRF and XSS attacks
 axios_instance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig<any>) => {
     const token = localStorage.getItem("token");

@@ -12,6 +12,7 @@ interface DraggableItemProps {
     isDragging: boolean;
     provided: {
       innerRef: React.LegacyRef<HTMLDivElement>;
+      // The interection below is used to make draggable items accepts any valid HTML or React element -> Making it adaptable to dnd events;
       draggableProps: JSX.IntrinsicAttributes &
         React.ClassAttributes<HTMLDivElement> &
         React.HTMLAttributes<HTMLDivElement>;

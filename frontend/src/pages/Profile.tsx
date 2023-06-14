@@ -21,7 +21,10 @@ function Profile({ email, onLogout }: ProfileProps) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    getUser();
+    (async () => {
+    await getUser();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   const schema = Zod.object({
