@@ -13,7 +13,7 @@ interface ProfileProps {
   onLogout: () => void;
 }
 
-function Profile({ email, onLogout }: ProfileProps) {
+function Profile({ onLogout }: ProfileProps) {
   const [name, setName] = useState("");
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
