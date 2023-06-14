@@ -39,7 +39,6 @@ function Copyright(props: {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignIn() {
@@ -59,7 +58,7 @@ export default function SignIn() {
   };
 
   const handleNavigate = (isLogin: boolean) => {
-    if (isLogin) navigate("/demo", { replace: true });
+    if (isLogin) navigate("/board", { replace: true });
   };
 
   const handleSubmit = async (event: {

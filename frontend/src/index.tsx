@@ -14,19 +14,7 @@ if (root) {
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route
-          path="/profile"
-          element={
-            <Profile
-              email={localStorage.getItem("email")}
-              onLogout={() => {
-                localStorage.clear();
-                window.location.href = "/";
-              }}
-            />
-          }
-        />
-        <Route path="/demo" element={<BoardPage />} />
+        <Route path="/board" element={<BoardPage />} />
         {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </BrowserRouter>
