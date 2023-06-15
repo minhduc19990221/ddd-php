@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import reportWebVitals from "./reportWebVitals";
 import SignUp from "./pages/SignUp";
-import Profile from "./pages/Profile";
 import BoardPage from "./pages/Board";
 
 const root = document.getElementById("root");
@@ -14,20 +13,7 @@ if (root) {
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route
-          path="/profile"
-          element={
-            <Profile
-              email={localStorage.getItem("email")}
-              onLogout={() => {
-                localStorage.clear();
-                window.location.href = "/";
-              }}
-            />
-          }
-        />
-        <Route path="/demo" element={<BoardPage />} />
-        {/* <Route path="/contact" element={<Contact />} /> */}
+        <Route path="/board" element={<BoardPage />} />
       </Routes>
     </BrowserRouter>
   );

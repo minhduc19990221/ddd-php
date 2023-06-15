@@ -39,13 +39,11 @@ function Copyright(props: {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
-  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -60,7 +58,7 @@ export default function SignIn() {
   };
 
   const handleNavigate = (isLogin: boolean) => {
-    if (isLogin) navigate("/demo", { replace: true });
+    if (isLogin) navigate("/board", { replace: true });
   };
 
   const handleSubmit = async (event: {
@@ -89,19 +87,19 @@ export default function SignIn() {
         .then((response) => {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("email", email);
+          sessionStorage.setItem("csrf_token", response.data.csrf_token);
+          console.log(response.data);
           handleOpen("Login successfully!");
           setIsLogin(true);
         })
         .catch((error) => {
           console.log(error);
-          setError(error.response.data.message);
           setIsLogin(false);
           handleOpen(error);
         });
     } catch (error) {
       console.log(error);
       setIsLogin(false);
-      setError(error.response.data.message);
     }
   };
 

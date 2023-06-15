@@ -25,23 +25,6 @@ class CardService
         ResponseSender::sendSuccessResponse(201, ['message' => 'Card created successfully']);
     }
 
-    public function getOne(int $id): ?Card
-    {
-        if (!$id) {
-            ResponseSender::sendErrorResponse(400, 'Missing parameters');
-            return null;
-        }
-
-        $card_repository = CardRepository::getInstance();
-        if ($card_repository === null) {
-            ResponseSender::sendErrorResponse(500, 'Internal server error');
-            return null;
-        }
-
-        $card_record = $card_repository->readOne($id);
-        return new Card($card_record['id'], $card_record['title'], $card_record['description']);
-    }
-
     public function getAll(int $board_id): array
     {
         if (!$board_id) {

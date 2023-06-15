@@ -23,16 +23,6 @@ class Card
         return $this->id;
     }
 
-    public function getTitle(): string
-    {
-        return htmlspecialchars($this->title);
-    }
-
-    public function getIndexBoard(): int
-    {
-        return $this->index_board;
-    }
-
     public function toArray(): array
     {
         return [

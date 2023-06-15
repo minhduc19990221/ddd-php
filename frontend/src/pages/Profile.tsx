@@ -13,7 +13,7 @@ interface ProfileProps {
   onLogout: () => void;
 }
 
-function Profile({ email, onLogout }: ProfileProps) {
+function Profile({ onLogout }: ProfileProps) {
   const [name, setName] = useState("");
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
@@ -21,7 +21,10 @@ function Profile({ email, onLogout }: ProfileProps) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    getUser();
+    (async () => {
+    await getUser();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   const schema = Zod.object({

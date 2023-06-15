@@ -15,21 +15,6 @@ class User
         $this->password = $password;
     }
 
-    public function getFullname(): string
-    {
-        return $this->fullname;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
     public function toArray(): array
     {
         return [

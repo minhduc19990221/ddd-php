@@ -4,7 +4,6 @@ import { DragDropContext } from "react-beautiful-dnd";
 import Profile from "./Profile";
 import axios_instance from "../utils/Interceptor";
 import DraggableList from "../components/DraggableList";
-import { TextField } from "@mui/material";
 
 interface Item {
   id: string;
@@ -32,11 +31,14 @@ const deleteCard = async (id: number) => {
   });
 }
 
-const createBoard = async (title: string) => {
-  // Call to your API to create a new list
-  await axios_instance.post("/boards", { title, email: localStorage.getItem("email") });
-}
 
+/**
+ * Reorders the items in a list by moving the item at the start index to the end index.
+ * @param list The list to reorder.
+ * @param startIndex The index of the item to move.
+ * @param endIndex The index to move the item to.
+ * @returns A new array with the items in the reordered order.
+ */
 const reorder = (
   list: Iterable<unknown> | ArrayLike<unknown>,
   startIndex: number,
